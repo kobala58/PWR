@@ -1,0 +1,5 @@
+{"method": "MQTT",
+  "port": 1883,
+  "interval": 10,
+  "source": "USDPLN",
+  "channel": "/data"}
