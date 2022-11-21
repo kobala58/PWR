@@ -300,33 +300,6 @@ def procNewsExample(msg):
     
 
 def main():
-
-    # enter your login credentials here
-    userId = 14030386
-    password = "beyU%ELYyvC7+NE"
-
-    # create & connect to RR socket
-    client = APIClient()
-    
-    # connect to RR socket, login
-    loginResponse = client.execute(loginCommand(userId=userId, password=password))
-    logger.info(str(loginResponse)) 
-
-    # check if user logged in correctly
-    if(loginResponse['status'] == False):
-        print('Login failed. Error code: {0}'.format(loginResponse['errorCode']))
-        return
-
-    # get ssId from login response
-    ssid = loginResponse['streamSessionId']
-    
-    # second method of invoking commands
-    # resp = client.commandExecute('getAllSymbols')
-    # resp = client.commandExecute('getTickPrices', dict(level=0, symbols=["EURPLN"], timestramp=int(time.time())))
-    resp = client.commandExecute('getSymbol', dict(symbol="EURPLN"))
-    print(resp["returnData"]["ask"])
-    client.disconnect()
-    
-    
+    pass   
 if __name__ == "__main__":
     main()	

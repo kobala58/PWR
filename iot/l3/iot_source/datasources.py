@@ -1,4 +1,4 @@
-import iot_source.xAPIConnector
+import xAPIConnector
 from dotenv import load_dotenv
 import os
 import time
@@ -8,8 +8,8 @@ def get_ask_price(instrument: str):
     load_dotenv()
     userId = os.environ.get("LOGIN")
     password = os.environ.get("PASSWORD")
-    client = iot_source.xAPIConnector.APIClient()
-    login_response = client.execute(iot_source.xAPIConnector.loginCommand(userId=userId, password=password))
+    client = xAPIConnector.APIClient()
+    login_response = client.execute(xAPIConnector.loginCommand(userId=userId, password=password))
     ssid = login_response['streamSessionId']
     resp = client.commandExecute('getSymbol', dict(symbol=instrument))
     client.disconnect()

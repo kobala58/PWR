@@ -1,5 +1,2 @@
 {"method": "MQTT",
-  "port": 1883,
-  "interval": 10,
-  "source": "USDPLN",
-  "channel": "/data"}
+  "port": "1883", "interval": 15, "source": "US100", "channel": "/data", "server": "172.17.0.2"}

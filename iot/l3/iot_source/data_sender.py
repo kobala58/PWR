@@ -1,23 +1,33 @@
+import asyncio
 import time
-import iot_source.datasources
+import datasources
 import requests
 import json
-import iot_source.mqtt_sender
+import mqtt_sender
+import paho.mqtt.publish as publish
 
 
-def sender():
-    with open("iot_source/config.json", "r") as data:
-        settings = json.load(data)
-    if settings["method"] == "REST":
-        while True:
-            payload = iot_source.datasources.get_ask_price(settings["source"])
-            requests.post("localhost:" + str(settings["port"]), json=payload)
-            time.sleep(settings["interval"])
-    elif settings["method"] == "MQTT":
-        iot_source.mqtt_sender.run()
-    else:
-        raise ValueError("Suitable method not found, try using REST/MQTT params")
+async def sender():
+    while True:
+        with open("config.json", "r") as data:
+            settings = json.load(data)
 
+        payload = datasources.get_ask_price(settings["source"])
+        
+        if settings["method"] == "REST":
+            while True:
+                requests.post(str(settings["server"]) + str(settings["port"]+str(settings["channel"])), json=payload)
+                time.sleep(settings["interval"])
+        
+        elif settings["method"] == "MQTT":
+            publish.single(
+                    topic=settings["channel"],
+                    payload = str(payload),
+                    hostname = settings["server"],
+                    )
+        else:
+            raise ValueError("Suitable method not found, try using REST/MQTT params")
+        await asyncio.sleep(settings["interval"])
 
 if __name__ == '__main__':
-    sender()
+    pass

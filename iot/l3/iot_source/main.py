@@ -1,12 +1,9 @@
 from pydantic import BaseModel
 from fastapi import FastAPI
 import json
-from multiprocessing import Process
-import iot_source.data_sender
+import data_sender
 from fastapi.middleware.cors import CORSMiddleware
-
-process = Process(iot_source.data_sender.sender())
-
+import asyncio
 
 class NewConfig(BaseModel):
     method: str
@@ -14,9 +11,12 @@ class NewConfig(BaseModel):
     interval: int
     source: str
     channel: str
+    server: str
 
+with open("config.json", "r") as jsonfile:
+    data = json.load(jsonfile)
 
-app = FastAPI(root_path="l3/iot_source")
+app = FastAPI()
 
 origins = [
     "http://localhost.tiangolo.com",
@@ -36,30 +36,27 @@ app.add_middleware(
 
 @app.get("/")
 async def config():
-    with open("iot_source/config.json", "r") as data:
+    with open("config.json", "r") as data:
         test = json.load(data)
-        return {
-            "config": "DUPA"
-        }
+        return test
 
 
 @app.post("/update/config/")
 async def update_config(conf: NewConfig):
-    with open("iot_source/config.json", "r") as jsonfile:
+    with open("config.json", "r") as jsonfile:
         data = json.load(jsonfile)
     print(data)
     for key, val in conf:
         data[key] = val
-    with open("iot_source/config.json", "w") as jsonfile:
+    with open("config.json", "w") as jsonfile:
         json.dump(data, jsonfile)
-    process.terminate()
-    process.start()
     return {
         "status": "updated",
         "config": data
     }
 
-
+import time
 @app.on_event('startup')
-async def start():
-    process.start()
+async def daemon_startup() -> None:
+    await asyncio.sleep(10)
+    asyncio.create_task(data_sender.sender())
