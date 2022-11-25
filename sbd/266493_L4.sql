@@ -1,4 +1,3 @@
-SET search_path TO world;
 -- EX1
 SELECT country.name
     ,city.name
@@ -54,3 +53,12 @@ UNION
     ORDER BY LE desc NULLS LAST
     LIMIT 10)
     ORDER BY LE;
+
+--
+
+SELECT city.name, countryinfo.doc->'geography'->>'Continent' as continent  FROM world.city JOIN world.countryinfo ON city.countrycode = countryinfo.doc ->> '_id'
+WHERE countryinfo.doc->'geography'->>'Continent' LIKE 'E%';
+
+select * from world.country;
+
+SELECT * FROM world.countryinfo limit 1;

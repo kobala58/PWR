@@ -1,5 +1,5 @@
 import time
-from fastapi import FastAPI
+from fastapi import FastAPI, responses
 from fastapi_mqtt import FastMQTT, MQTTConfig
 from pydantic import BaseModel 
 from servers_mainipulation import DockerOperations
@@ -49,12 +49,17 @@ async def server_list():
     drv = DockerOperations()
     return drv.all_containers()
 
-@app.post("/change_config")
-async def update_server_settings(conf: Config):
-    """
-    Endpoint to change
-    """ 
-    pass
+@app.post("/change_config/{port}")
+async def update_server_settings(port: int, conf: Config):
+    res = requests.post(f"http://localhost:{port}/update/config/", json={
+        "method": conf.method,
+        "port": conf.port,
+        "interval": conf.interval,
+        "source": conf.source,
+        "channel": conf.channel,
+        "server": conf.server
+        })
+    return res.json()
 
 @app.get("/clear")
 async def clear():
@@ -66,25 +71,26 @@ async def recv_data(data: Payload):
     print(data)
     
 
-@app.get("/get_server_config")
-async def get_server_info(id: str):
-    pass
+@app.get("/get_server_config/{port}")
+async def get_server_info(port: int):
+    print(f"Port: {port}")
+    data = requests.get(f"http://localhost:{port}/").json()
+    return data
 
 @app.post("/create_new")
 async def create(conf: CreateParams):
     dvr = DockerOperations()
     data = dvr.spawn_new_container(conf.name)
-    time.sleep(5)
-    requests.post("localhost:"+str(data["port"])+"/update/config/", json={
-        "method": conf.method,
-        "port": conf.port,
-        "interval": conf.interval,
-        "source": conf.source,
-        "channel": conf.channel,
-        "server": conf.server
-        })    
-
-
+    # time.sleep(10)
+    # res = requests.post(f"http://localhost:{data['port']}/update/config/", json={
+    #     "method": conf.method,
+    #     "port": conf.port,
+    #     "interval": conf.interval,
+    #     "source": conf.source,
+    #     "channel": conf.channel,
+    #     "server": conf.server
+    #     })
+    return data
 
 #MQTT METGODS
 
