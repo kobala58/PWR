@@ -1,6 +1,7 @@
 from docker.api import container
 from docker.api.build import random
-from db import main
+import pydantic
+import db
 import docker
 
 class DockerOperations():
@@ -38,14 +39,18 @@ class DockerOperations():
                     "message": "Interal API error"
                     }
 
-    def spawn_new_container(self, name:str):
+    def spawn_new_container(self, conf = pydantic.BaseModel):
         port = random.randint(8000, 8250)
-        resp = self.client.containers.run("iot_data_sender:0.9",
+        envvars = {key.upper():val for key,val in dict(conf).items()}
+        resp = self.client.containers.run("iot_data_sender:1.5",
                                     detach = True,
                                     ports = {'80/tcp':port},
-                                    name = name,
-                                          # extra_hosts = {"host.docker.internal":"host-gateway"}
+                                    name = conf.name,
+                                    environment = envvars,
+                                    network = "iot",
+                                    extra_hosts = {"host.docker.internal":"172.18.0.1"}
                                    )
+        
         return{
                 "short_id": resp.short_id,
                 "port": port,
@@ -54,5 +59,6 @@ class DockerOperations():
     
     def clear(self):
         for x in self.all_containers():
-            if x["name"] != "mosquitto2":
+            if x["name"] != "mosquitto":
                 self.client.containers.get(x["short_id"]).stop()
+        return True

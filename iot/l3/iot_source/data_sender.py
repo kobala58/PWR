@@ -15,9 +15,7 @@ async def sender():
         payload = datasources.get_ask_price(settings["source"])
         
         if settings["method"] == "REST":
-            while True:
-                requests.post(str(settings["server"]) + str(settings["port"]+str(settings["channel"])), json=payload)
-                time.sleep(settings["interval"])
+            requests.post(f"http://{settings['server']}:{settings['port']}{settings['channel']}", json=payload)
         
         elif settings["method"] == "MQTT":
             publish.single(
@@ -27,7 +25,7 @@ async def sender():
                     )
         else:
             raise ValueError("Suitable method not found, try using REST/MQTT params")
-        await asyncio.sleep(settings["interval"])
+        await asyncio.sleep(int(settings["interval"]))
 
 if __name__ == '__main__':
     pass
