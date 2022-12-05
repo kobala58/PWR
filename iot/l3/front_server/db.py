@@ -23,7 +23,7 @@ def get_all_connections():
 def get_all_servers():
     cur, con = est_conn()
     res = cur.execute("""
-                SELECT * FROM servers
+                select * from servers inner join connections on connections.id = servers.name
                 """)
     print()
     print(res)

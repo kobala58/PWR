@@ -6,6 +6,7 @@ import requests
 import models
 import db
 from fastapi.middleware.cors import CORSMiddleware
+import random
 
 mqtt_config = MQTTConfig(host = "172.18.0.2",
     port= 1883,
@@ -87,6 +88,14 @@ async def create(conf: models.CreateParams):
     data = dvr.spawn_new_container(conf)
     db.insert_new_server(data["short_id"], conf.name, conf.method, conf.port, conf.interval, conf.source, conf.channel, conf.server, data["port"])
     return data
+
+@app.post("/create_empty")
+async def create(conf: models.CreateParams):
+    # dvr = DockerOperations()
+    # data = dvr.spawn_new_container(conf)
+    db.insert_new_server("FAKE", conf.name, conf.method, conf.port, conf.interval, conf.source, conf.channel, conf.server, random.randint(8000, 8250))
+    return ["FAKE", random.randint(8000, 8250)]
+
 
 #MQTT METGODS
 

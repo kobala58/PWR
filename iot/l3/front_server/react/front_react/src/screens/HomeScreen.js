@@ -18,7 +18,6 @@ function HomeScreen() {
 
     return (
         <div>
-            <h1>IoT</h1>
             <div>
                 <Row>
                     {post.map(elem=> (
