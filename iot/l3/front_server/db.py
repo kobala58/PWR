@@ -52,27 +52,6 @@ def edit_server(data: tuple):
 
 def main():
     cur, con = est_conn()
-    # cur.execute("""
-    #             CREATE TABLE servers(
-    #                 id text,
-    #                 name text,
-    #                 method text,
-    #                 port text,
-    #                 inverval int,
-    #                 source text,
-    #                 channel text,
-    #                 server text
-    #                 )
-    #             """)
-    # cur.execute(
-    #         """
-    #         CREATE TABLE connections(
-    #             id text,
-    #             port text
-    #             )
-    #         """
-    #         )
-    print("exe")
     print(get_all_connections())
 
 def clear_server():
