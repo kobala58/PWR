@@ -6,7 +6,7 @@ class BatteryException(Exception):
 
 @dataclass()
 class Drone:
-    battery: int
+    battery: float
     battery_usage: float
     photo_radius: int
     overlap: float
@@ -17,15 +17,21 @@ class Drone:
     wind_stop: int
     x: int = field(init=False)
     y: int = field(init=False)
+    __iner_task__: dict = field(init=False)
 
     def __post_init__(self):
         match self.move_method:
             case "v":
-                self.x = int(self.photo_size)+1
+                self.x = int(self.photo_radius)+1
                 self.y = 0
             case "h":
                 self.x = 0
-                self.y = int(self.photo_size)+1
+                self.y = int(self.photo_radius)+1
+
+
+    def __str__(self) -> str:
+        text = f"Position ({self.x},{self.y})\n Battery: ({self.battery})\nTask: {self.__iner_task__}"
+        return text
 
     def drain_battery(self, factor):
         self.battery -= (self.battery_usage * factor).__round__(2)
@@ -64,6 +70,10 @@ class Drone:
             print("Battery ends, sadge")
 
     def move_seps(self, size, direction):
+        self.__iner_task__ = {
+                "direction": direction,
+                "size": size
+                }
         for x in range(size):
             try:
                 self.take_photo()
