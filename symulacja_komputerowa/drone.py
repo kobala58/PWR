@@ -20,6 +20,7 @@ class Drone:
     __iner_task__: dict = field(init=False)
 
     def __post_init__(self):
+        self.__iner_task__ = {"staus": "none"}
         match self.move_method:
             case "v":
                 self.x = int(self.photo_radius)+1
@@ -30,7 +31,8 @@ class Drone:
 
 
     def __str__(self) -> str:
-        text = f"Position ({self.x},{self.y})\n Battery: ({self.battery})\nTask: {self.__iner_task__}"
+        print(self.__iner_task__)
+        text = f"Position ({self.x},{self.y})\n Battery: ({self.battery})"
         return text
 
     def drain_battery(self, factor):
@@ -39,7 +41,7 @@ class Drone:
             raise BatteryException
     
     def get_wind_val(self):
-        pass
+        return 0
 
     def move(self, direction: str):
         factor = []
