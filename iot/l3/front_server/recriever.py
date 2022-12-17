@@ -45,7 +45,6 @@ mqtt.init_app(app)
 
 @app.get("/server_list")
 async def server_list():
-    # TODO: REWRITE IT TO GET DATA FROM DATABASE
     data = db.get_all_servers()
     return data
 
@@ -101,7 +100,6 @@ async def create(conf: models.CreateParams):
 
 @mqtt.on_connect()
 def connect(client, flags, rc, properties):
-    print("CHUJ")
     mqtt.client.subscribe("/data") #subscribing mqtt topic
     print("Connected: ", client, flags, rc, properties)
 

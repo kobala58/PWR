@@ -11,7 +11,9 @@ class Route:
 
 @dataclass()
 class Horizontal(Route):
-    pass
+    
+    def execute_route(self):
+        return super().execute_route()
 
 
 @dataclass()

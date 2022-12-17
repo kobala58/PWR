@@ -82,7 +82,15 @@ class Drone:
                 self.move(direction=direction)
             except BatteryException:
                 return False
+    
+    def calc_dist_to_boundary(self, direction: str) -> int:
+        """
+        Calculate distance to boudary in selected direction
+        """
+        distance = 0
 
+        return distance 
+        
 
     def take_photo(self):
         self.drain_battery(0.1)

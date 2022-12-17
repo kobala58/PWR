@@ -18,8 +18,8 @@ class Queries:
                 )"""
     
     def insert_val(self, data) -> bool:
-        q = """INSERT INTO public.recv_data
-        """
+        q = """INSERT INTO public.recv_data"""
+
 
 
 if __name__ == "__main__":
