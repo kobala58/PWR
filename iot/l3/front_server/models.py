@@ -1,4 +1,10 @@
 from pydantic import BaseModel
+from enum import Enum
+
+class IntervalTime(Enum):
+    COUNT = "count"
+    TIME = "time"
+    
 
 class Config(BaseModel):
     svr_id: str
@@ -23,3 +29,10 @@ class Payload(BaseModel):
     walor: str
     bid: str
     ask: str
+
+class Gatherer(BaseModel):
+    walor: str
+    type_interval: IntervalTime
+    interval_value: int # seconds or count
+
+

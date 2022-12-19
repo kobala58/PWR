@@ -7,6 +7,7 @@ import models
 import db
 from fastapi.middleware.cors import CORSMiddleware
 import random
+import json 
 
 mqtt_config = MQTTConfig(host = "172.18.0.2",
     port= 1883,
@@ -67,14 +68,23 @@ async def update_server_settings(name: str, conf: models.Config):
 @app.get("/clear")
 async def clear():
     drv = DockerOperations()
-    res = drv.clear()
+    # res = drv.clear() -> Temporary solution until I provide way to stop and clean only generators
     res2 = db.clear_server()
     return True
 
 @app.post("/data")
 async def recv_data(data: models.Payload):
-    print(data)
-    
+    print(data.walor)
+
+@app.post("/aggregator")
+async def aggregator(data: models.IntervalTime): 
+    """
+    method to update config of aggregator
+    TODO: make aggregator spawnable via docker
+    """
+    # make request to change config
+    pass
+
 
 @app.get("/get_server_config/{name}")
 async def get_server_info(name: str):
@@ -105,4 +115,7 @@ def connect(client, flags, rc, properties):
 
 @mqtt.on_message()
 async def message(client, topic, payload, qos, properties):
-    print("Received message: ",topic, payload.decode(), qos, properties)
+    dec_payload = payload.decode().replace("\'", "\"") # replace to double-quoted bc JSON requires this 
+    dec_jsos  = json.loads(dec_payload)
+    print(type(dec_jsos))
+    print(dec_jsos)

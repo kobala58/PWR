@@ -42,7 +42,7 @@ class DockerOperations():
     def spawn_new_container(self, conf = pydantic.BaseModel):
         port = random.randint(8000, 8250)
         envvars = {key.upper():val for key,val in dict(conf).items()}
-        resp = self.client.containers.run("iot_data_sender:1.5",
+        resp = self.client.containers.run("iot_data_sender:1.2",
                                     detach = True,
                                     ports = {'80/tcp':port},
                                     name = conf.name,
@@ -58,6 +58,7 @@ class DockerOperations():
                 }
     
     def clear(self):
+        # Todo: rewrite it to only clean images present in database
         for x in self.all_containers():
             if x["name"] != "mosquitto":
                 self.client.containers.get(x["short_id"]).stop()
