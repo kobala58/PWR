@@ -9,7 +9,7 @@ class Queries:
                 host="0.0.0.0",
                 port=54320
                 )
-        self.cur = conn.cursor()
+        self.cur = self.conn.cursor()
 
     def insert_config(self, config) ->bool:
         q = """INSERT INTO public.sender_configs(
@@ -17,8 +17,16 @@ class Queries:
                 VALUES ()
                 )"""
     
-    def insert_val(self, data) -> bool:
-        q = """INSERT INTO public.recv_data"""
+    def insert_val(self, data: set) -> bool:
+        q = """INSERT INTO public.recv_data (walor, time, bid, ask) VALUES (%s, %s, %s, %s)"""
+        self.cur.execute(q, data)
+        self.conn.commit()
+        return True
+    
+    def select_top_walor(self, walor, top):
+        q = """SELECT MIN(bid),MAX(bid), AVG(bid) FROM public.recv_data WHERE walor = %s LIMIT %s"""
+        self.cur.execute(q, (walor, top))
+        return self.cur.fetchone()
 
 
 
