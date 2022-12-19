@@ -1,5 +1,6 @@
 version: "3.8"
 services:
+
   db:
     image: postgres
     container_name: pgdb
@@ -24,9 +25,19 @@ services:
     volumes:
       - pgadmin-data:/var/lib/pgadmin
 
+  cache:
+      image: redis:6.2-alpine
+      restart: always
+      ports:
+        - '6379:6379'
+      volumes: 
+        - cache:/data
+
 volumes:
   local_pgdata:
   pgadmin-data:
+  cache:
+    driver: local
 
 networks:
   default:
