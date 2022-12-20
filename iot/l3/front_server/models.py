@@ -35,4 +35,8 @@ class Gatherer(BaseModel):
     type_interval: IntervalTime
     interval_value: int # seconds or count
 
-
+class AggregatorData(BaseModel):
+    walor: str
+    bid_min: float 
+    bid_max: float
+    bid_avg: float

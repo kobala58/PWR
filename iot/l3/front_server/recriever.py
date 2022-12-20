@@ -7,7 +7,8 @@ import models
 import db
 from fastapi.middleware.cors import CORSMiddleware
 import random
-import json 
+import json
+import requests
 
 mqtt_config = MQTTConfig(host = "172.18.0.2",
     port= 1883,
@@ -74,17 +75,21 @@ async def clear():
 
 @app.post("/data")
 async def recv_data(data: models.Payload):
-    print(data.walor)
+    print(data)
 
-@app.post("/aggregator")
-async def aggregator(data: models.IntervalTime): 
+@app.post("/aggregator/upload/config")
+async def aggregator_config(data: models.Gatherer): 
     """
     method to update config of aggregator
     TODO: make aggregator spawnable via docker
     """
     # make request to change config
-    pass
+    res = requests.post("http://0.0.0.0:8081/config", json=data.json())
+    return res.text
 
+@app.post("/aggregator")
+async def aggregator_data(data: models.AggregatorData):
+    print(data)
 
 @app.get("/get_server_config/{name}")
 async def get_server_info(name: str):

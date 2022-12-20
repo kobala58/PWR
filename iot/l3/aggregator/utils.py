@@ -6,6 +6,7 @@ from sql import Queries
 from datetime import datetime
 from datetime import timezone
 import redis
+import requests
 
 class AggregatorType(str, Enum):
     COUNT = "count"
@@ -57,7 +58,7 @@ def save_message_to_database(data: dict) -> bool:
         config = json.load(jsonfile)
     if int(config["interval_value"]) == int(counter):
         res = drv.select_top_walor(data["walor"], int(config["interval_value"]))
-        send_data_to_server(res)
+        send_data_to_server(list(res), data["walor"])
         r.set(data["walor"], 0)
     else:
         print(f"{data['walor']}: {counter}")
@@ -67,9 +68,14 @@ def save_message_to_database(data: dict) -> bool:
         data["ask"])
     drv.insert_val(payload)
 
-def send_data_to_server(data):
-    print(data)
-    
-
+def send_data_to_server(data, walor):
+    payload = {
+            "walor": walor,
+            "bid_min": data[0],
+            "bid_max": data[1],
+            "bid_avg": data[2]
+            }
+    print(payload)
+    requests.post("http://0.0.0.0:8080/aggregator", json=payload)
 
 
