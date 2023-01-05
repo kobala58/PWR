@@ -44,9 +44,10 @@ async def get_ohlc_data():
 
 @app.post("/data")
 async def get_Data(data: utils.Payload):
+    print(data)
     utils.save_message_to_database(data.dict())
 
-@app.post("change_config")
+@app.post("/change_config")
 async def config_change(config: utils.Config):
     with open("config.json", "r") as jsonfile:
         data = json.load(jsonfile)

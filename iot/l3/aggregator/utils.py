@@ -52,6 +52,7 @@ def send_data_to_config():
 def save_message_to_database(data: dict) -> bool:
     r = redis.Redis(host="0.0.0.0", port=6379, db=0, decode_responses=True)
     r.incr(data["walor"])
+    r.hset(data["walor"]+"_v", mapping=data)
     counter = r.get(data["walor"])
     drv = Queries()
     with open("config.json", "r") as jsonfile:
