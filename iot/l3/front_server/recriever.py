@@ -47,11 +47,18 @@ mqtt.init_app(app)
 
 @app.get("/server_list")
 async def server_list():
+    """
+    Return active server list (at least i hope so)
+    """
     data = db.get_all_servers()
     return data
 
 @app.post("/change_config/{name}")
 async def update_server_settings(name: str, conf: models.Config):
+    """
+    Update server config file via REST service
+    """
+
     port = db.get_server_info(name)
     print(port)
     print(port[0][0])
@@ -69,7 +76,6 @@ async def update_server_settings(name: str, conf: models.Config):
 @app.get("/clear")
 async def clear():
     drv = DockerOperations()
-    # res = drv.clear() -> Temporary solution until I provide way to stop and clean only generators
     res2 = db.clear_server()
     return True
 
@@ -110,7 +116,9 @@ async def create(conf: models.CreateParams):
     db.insert_new_server("FAKE", conf.name, conf.method, conf.port, conf.interval, conf.source, conf.channel, conf.server, random.randint(8000, 8250))
     return ["FAKE", random.randint(8000, 8250)]
 
-
+@app.post("/filter/create")
+async def create_filter():
+    pass
 #MQTT METGODS
 
 @mqtt.on_connect()
