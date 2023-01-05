@@ -1,5 +1,4 @@
-import time
-from fastapi import FastAPI, responses
+from fastapi import FastAPI
 from fastapi_mqtt import FastMQTT, MQTTConfig
 from servers_mainipulation import DockerOperations
 import requests
@@ -9,6 +8,11 @@ from fastapi.middleware.cors import CORSMiddleware
 import random
 import json
 import requests
+
+
+# TODO -> MOVE TO CONTAINER 
+# REMOVE MQTT SUPPORT
+
 
 mqtt_config = MQTTConfig(host = "172.18.0.2",
     port= 1883,
@@ -75,52 +79,88 @@ async def update_server_settings(name: str, conf: models.Config):
 
 @app.get("/clear")
 async def clear():
+    """
+    Clear existing images and databases entries
+    """
+
     drv = DockerOperations()
     res2 = db.clear_server()
     return True
 
 @app.post("/data")
 async def recv_data(data: models.Payload):
+    """
+    Data entry endpoint 
+    """
+    # TODO idk why i need to implement this endpoint
+
     print(data)
 
 @app.post("/aggregator/upload/config")
 async def aggregator_config(data: models.Gatherer): 
     """
-    method to update config of aggregator
-    TODO: make aggregator spawnable via docker
+        Endpoint to update config of aggregator microservice
     """
     # make request to change config
-    res = requests.post("http://0.0.0.0:8081/config", json=data.json())
+    res = requests.post("http://0.0.0.0:8081/config", json=data.json()) #hard coded solution - not nice
     return res.text
 
 @app.post("/aggregator")
 async def aggregator_data(data: models.AggregatorData):
+    """
+    Endpoint to handle data from aggregator
+    """
     print(data)
 
-@app.get("/get_server_config/{name}")
+@app.get("/generator/{name}/config")
 async def get_server_info(name: str):
+    """
+    Endpoint handling config of requested service
+    """
     data = requests.get(f"http://{name}:80/").json()
     return data
 
-@app.post("/create_new")
-async def create(conf: models.CreateParams):
+@app.post("/generator/create_new")
+async def create_generator(conf: models.CreateParams):
+    """
+    Endpoint to handle creation of new generator
+    """
     dvr = DockerOperations()
     data = dvr.spawn_new_container(conf)
     db.insert_new_server(data["short_id"], conf.name, conf.method, conf.port, conf.interval, conf.source, conf.channel, conf.server, data["port"])
     return data
 
-@app.post("/create_empty")
+@app.post("/generator/create_empty")
 async def create(conf: models.CreateParams):
-    # dvr = DockerOperations()
-    # data = dvr.spawn_new_container(conf)
+    """
+    Create Empty generatir config
+    """
     db.insert_new_server("FAKE", conf.name, conf.method, conf.port, conf.interval, conf.source, conf.channel, conf.server, random.randint(8000, 8250))
     return ["FAKE", random.randint(8000, 8250)]
 
 @app.post("/filter/create")
-async def create_filter():
+async def filter_create():
+    """
+    Endpoint to create new filter endpoint
+    """
     pass
-#MQTT METGODS
 
+@app.post("/filter/{name}/config/edit")
+async def filter_edit_config(name: str):
+    """
+    Endpoint for editing named filter
+    """
+    pass
+
+@app.get("/filter/{name}/config")
+async def filter_show_config(name: str):
+    """
+    Endpoint for showing config of selected filter
+    """
+    pass
+# MQTT METGODS
+# TODO Move MQTT-relate functions to outside file
+# TODO Remove mqtt method to make moving into Container possible
 @mqtt.on_connect()
 def connect(client, flags, rc, properties):
     mqtt.client.subscribe("/data") #subscribing mqtt topic
