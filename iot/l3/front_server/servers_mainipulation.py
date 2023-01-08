@@ -3,6 +3,7 @@ from docker.api.build import random
 import pydantic
 import db
 import docker
+import models
 
 class DockerOperations():
     def __init__(self) -> None:
@@ -39,7 +40,7 @@ class DockerOperations():
                     "message": "Interal API error"
                     }
 
-    def spawn_new_container(self, conf = pydantic.BaseModel):
+    def spawn_new_container(self, conf: models.CreateParams):
         port = random.randint(8000, 8250)
         envvars = {key.upper():val for key,val in dict(conf).items()}
         resp = self.client.containers.run("iot_data_sender:1.2",
@@ -57,6 +58,9 @@ class DockerOperations():
                 "name": resp.name
                 }
     
+    def filter_create(filter: models.Filter):
+        pass
+
     def clear(self):
         # Todo: rewrite it to only clean images present in database
         for x in self.all_containers():

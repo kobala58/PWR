@@ -40,3 +40,7 @@ class AggregatorData(BaseModel):
     bid_min: float 
     bid_max: float
     bid_avg: float
+
+class Filter:
+    name: str,
+    
