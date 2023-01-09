@@ -1,0 +1,26 @@
+use world
+'switched to db world'
+db.createCollection("continents")
+{ ok: 1 }
+db.continents.insertMany([
+  {name: "Asia"},
+  {name: "Africa"},
+  {name: "Australia"},
+  {name: "North America"},
+  {name: "South America"},
+  {name: "Europe"},
+  {name: "Antartica"}
+  ])
+{ acknowledged: true,
+  insertedIds: 
+   { '0': ObjectId("63bc83496da779d4585bef50"),
+     '1': ObjectId("63bc83496da779d4585bef51"),
+     '2': ObjectId("63bc83496da779d4585bef52"),
+     '3': ObjectId("63bc83496da779d4585bef53"),
+     '4': ObjectId("63bc83496da779d4585bef54"),
+     '5': ObjectId("63bc83496da779d4585bef55"),
+     '6': ObjectId("63bc83496da779d4585bef56") } }
+db.continents.drop()
+true
+db.dropDatabase()
+{ ok: 1, dropped: 'world' }
