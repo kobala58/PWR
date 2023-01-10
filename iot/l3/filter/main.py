@@ -4,6 +4,7 @@ from fastapi.middleware.cors import CORSMiddleware
 import os
 import json
 import utils
+import asyncio
 
 app = FastAPI()
 
@@ -26,8 +27,11 @@ async def config_change(config: utils.Config):
         "config": data
     }
 
+
 @app.on_event('startup')
-async def est_conn():
+async def daemon_startup() -> None:
+    # if env variable exitst overwrite acutal config
     if "METHOD" in os.environ:
         utils.overwrite_config()
-
+    await asyncio.sleep(10)
+    asyncio.create_task(utils.send_data_to_config())
