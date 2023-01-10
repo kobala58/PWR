@@ -138,6 +138,12 @@ async def create(conf: models.CreateParams):
     db.insert_new_server("FAKE", conf.name, conf.method, conf.port, conf.interval, conf.source, conf.channel, conf.server, random.randint(8000, 8250))
     return ["FAKE", random.randint(8000, 8250)]
 
+@app.post("/filter/data")
+async def filter_data(data: models.FilterData):
+    print("Recrived from filter")
+    print(data)
+
+
 @app.post("/filter/create")
 async def filter_create():
     """
@@ -170,5 +176,5 @@ def connect(client, flags, rc, properties):
 async def message(client, topic, payload, qos, properties):
     dec_payload = payload.decode().replace("\'", "\"") # replace to double-quoted bc JSON requires this 
     dec_jsos  = json.loads(dec_payload)
-    print(type(dec_jsos))
-    print(dec_jsos)
+    # print(type(dec_jsos))
+    # print(dec_jsos)
