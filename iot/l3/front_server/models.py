@@ -42,5 +42,8 @@ class AggregatorData(BaseModel):
     bid_avg: float
 
 class Filter:
-    name: str,
-    
+    name: str
+
+class FilterData(BaseModel):
+    status: str
+    values: list
