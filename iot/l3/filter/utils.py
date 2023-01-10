@@ -8,6 +8,11 @@ import redis
 import requests
 import asyncio
 
+class Config(BaseModel):
+    services: list 
+    interval_value: str
+    target: str
+
 def overwrite_config():
     """
         This funcion is called whenever OS ENV variable is set upon creating docker container
@@ -16,8 +21,10 @@ def overwrite_config():
     with open("config.json", "r") as jsonfile:
         data = json.load(jsonfile)
 
-    for x in ["METHOD", "PORT", "CHANNEL", "SERVER", "TYPE_INTERVAL", "INTERVAL_VALUE"]:
+    for x in ["interval_value","target"]:
         data[x.lower()] = os.environ[x]
+
+    data["services"] = [x.split() for x in os.environ["SERVICES"]]
     
     with open("config.json", "w") as jsonfile:
         json.dump(data, jsonfile)
@@ -42,8 +49,9 @@ async def send_data_to_config():
                 'status': 'OK',
                 'values': data
                 }
+        print(payload)
         requests.post(config["target"], json = payload)
-        await asyncio.sleep(config["interval_value"])
+        await asyncio.sleep(int(config["interval_value"]))
 
 
 if __name__ == "__main__":
