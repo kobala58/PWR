@@ -110,7 +110,9 @@ async def aggregator_data(data: models.AggregatorData):
     """
     Endpoint to handle data from aggregator
     """
+    print("--Aggregator--")
     print(data)
+    print("------")
 
 @app.get("/generator/{name}/config")
 async def get_server_info(name: str):
@@ -127,7 +129,7 @@ async def create_generator(conf: models.CreateParams):
     """
     dvr = DockerOperations()
     data = dvr.spawn_new_container(conf)
-    db.insert_new_server(data["short_id"], conf.name, conf.method, conf.port, conf.interval, conf.source, conf.channel, conf.server, data["port"])
+    # db.insert_new_server(data["short_id"], conf.name, conf.method, conf.port, conf.interval, conf.source, conf.channel, conf.server, data["port"])
     return data
 
 @app.post("/generator/create_empty")
@@ -140,8 +142,10 @@ async def create(conf: models.CreateParams):
 
 @app.post("/filter/data")
 async def filter_data(data: models.FilterData):
+    print("----")
     print("Recrived from filter")
     print(data)
+    print("----")
 
 
 @app.post("/filter/create")

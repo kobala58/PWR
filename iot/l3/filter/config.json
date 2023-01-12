@@ -1,6 +1,1 @@
-{
-  "services": ["BTC", "USDPLN"],
-  "interval_value": "10",
-  "target": "http://localhost:8080/filter/data"
-}
-
+{"services": ["USDJPY", "BITCOIN"], "interval_value": "10", "target": "http://localhost:8080/filter/data"}
