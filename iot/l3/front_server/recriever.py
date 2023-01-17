@@ -102,6 +102,7 @@ async def aggregator_config(data: models.Gatherer):
         Endpoint to update config of aggregator microservice
     """
     # make request to change config
+
     res = requests.post("http://0.0.0.0:8081/config", json=data.json()) #hard coded solution - not nice
     return res.text
 
@@ -155,12 +156,18 @@ async def filter_create():
     """
     pass
 
-@app.post("/filter/{name}/config/edit")
-async def filter_edit_config(name: str):
+@app.post("/filter/config/edit")
+async def filter_edit_config(config: models.FilterConfig):
     """
-    Endpoint for editing named filter
-    """
-    pass
+    Endpoint for editing filter
+    """ 
+    res = requests.post(
+            "http://0.0.0.0:8083/config",
+            json=config.dict(),
+            headers={"Content-Type": "application/json; charset=utf-8"}
+            ) #hard coded solution - not nice
+    return res.json()
+    
 
 @app.get("/filter/{name}/config")
 async def filter_show_config(name: str):

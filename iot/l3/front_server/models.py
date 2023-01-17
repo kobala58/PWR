@@ -47,3 +47,9 @@ class Filter:
 class FilterData(BaseModel):
     status: str
     values: list
+
+class FilterConfig(BaseModel):
+    services: list 
+    interval_value: str
+    target: str
+

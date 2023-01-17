@@ -13,15 +13,17 @@ async def config():
     with open("config.json", "r") as jsonfile:
         return jsonfile
 
-@app.post("/change_config")
+@app.post("/config")
 async def config_change(config: utils.Config):
+
     with open("config.json", "r") as jsonfile:
         data = json.load(jsonfile)
-    print(data)
+    
     for key, val in config:
         data[key] = val
     with open("config.json", "w") as jsonfile:
         json.dump(data, jsonfile)
+    print(f"Recrieved new config: \n{data}")
     return {
         "status": "updated",
         "config": data
