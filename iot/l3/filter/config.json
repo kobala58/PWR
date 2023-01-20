@@ -1,1 +1,1 @@
-{"services": ["USDPLN", "USDJPY", "NATGAS"], "interval_value": "5", "target": "http://localhost:8080/filter/data"}
+{"services": ["USDPLN", "USDJPY", "NATGAS"], "interval_value": "6", "target": "http://localhost:8080/filter/data"}
