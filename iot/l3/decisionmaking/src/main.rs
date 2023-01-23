@@ -5,8 +5,7 @@ use serde::{Deserialize, Serialize};
 use std::fs::File;
 use std::io::Read;
 use std::io;
-use rumqttc::{Client, MqttOptions, QoS};
-use rumqttc::mqttbytes::v4::ConnectReturnCode;
+use rumqttc::{MqttOptions, Client, QoS};
 
 // config.json serializer
 #[derive(Serialize, Deserialize)]
@@ -15,30 +14,15 @@ struct Config {
     is_on: bool,
 }
 
-
-
 fn mqtt_publish(data: &str) -> Result<(), io::Error> {
-    let topic = String::from("/act");
-    let server = String::from("localhost");
-    let mqtt_options = MqttOptions::new("RustPublisher", server, 1883);
+    let mut mqtt_options = MqttOptions::new("RustPublisher", "localhost", 1883); // est connection
+    mqtt_options.set_keep_alive(Duration::from_secs(10)); 
     let (mut mqtt_client, notifications) = Client::new(mqtt_options, 10);
 
-    mqtt_client.subscribe(topic, QoS::AtLeastOnce).unwrap();
-
-    let result = mqtt_client.publish(topic, QoS::AtLeastOnce, false, data.as_bytes()).unwrap();
-
-    match result {
-        ConnectReturnCode::Success => println!("Data: {} was sent to topic: {}", data, topic),
-        _ => println!("Error occured while sending data"),
-    }
-
-    for notification in notifications {
-        match notification {
-            _ => (),
-        }
-    }
+    mqtt_client.subscribe("heater/temp", QoS::AtLeastOnce).unwrap();
+    mqtt_client.publish("heater/tmp", QoS::AtLeastOnce, false, data.as_bytes()).unwrap();
     Ok(())
-}
+    }
 
 fn main() {
 
