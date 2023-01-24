@@ -5,27 +5,58 @@ use serde::{Deserialize, Serialize};
 use std::fs::File;
 use std::io::Read;
 use std::io;
-use rumqttc::{MqttOptions, Client, QoS};
+use rocket;
+use rocket::routes;
+use paho_mqtt as mqtt;
+use std::process;
+use rocket::serde::json::Json;
 
-// config.json serializer
+
 #[derive(Serialize, Deserialize)]
 struct Config {
     wattage: u32, 
     is_on: bool,
 }
 
-fn mqtt_publish(data: &str) -> Result<(), io::Error> {
-    let mut mqtt_options = MqttOptions::new("RustPublisher", "localhost", 1883); // est connection
-    mqtt_options.set_keep_alive(Duration::from_secs(10)); 
-    let (mut mqtt_client, notifications) = Client::new(mqtt_options, 10);
+fn mqtt_publish(data: &str) -> () {
+    // Create a client & define connect options
+    let cli = mqtt::Client::new("tcp://localhost:1883").unwrap_or_else(|err| {
+        println!("Error creating the client: {:?}", err);
+        process::exit(1);
+    });
 
-    mqtt_client.subscribe("heater/temp", QoS::AtLeastOnce).unwrap();
-    mqtt_client.publish("heater/tmp", QoS::AtLeastOnce, false, data.as_bytes()).unwrap();
-    Ok(())
+    let conn_opts = mqtt::ConnectOptionsBuilder::new()
+        .keep_alive_interval(Duration::from_secs(20))
+        .clean_session(true)
+        .finalize();
+
+    // Connect and wait for it to complete or fail
+    cli.connect(conn_opts);
+
+    // Create a message and publish it
+    let msg = mqtt::Message::new("/heater/temp", data, 0);
+    let tok = cli.publish(msg);
+
+
+    // Disconnect from the broker
+    let tok = cli.disconnect(None);
     }
 
-fn main() {
+#[rocket::get("/")]
+fn index() -> &'static str {
+    "Hello, world!"
+}
 
+#[rocket::post("/config", format = "application/json", data = "<config>")]
+fn config(config: Json<Config>) -> &'static str {
+    // let mut file = File::create("config.json").expect("couldn't create file");
+    println!("{}", config);
+    "Data saved to file"
+}
+
+#[rocket::main]
+async fn main() -> Result<(), rocket::Error> { 
+    
     thread::spawn(move || {
         let outside: f64 = 10.0;
         let mut cycles_off: i32 = 0;
@@ -73,10 +104,12 @@ fn main() {
             //TODO: mqtt sending
             mqtt_publish(&temp.to_string());
             thread::sleep(Duration::from_secs(5)); // sleep at the end of executing loop
-        }
+        }});
 
-    });
-    loop {
-        thread::sleep(Duration::from_secs(5));
-    }
+    let _rocket = rocket::build()
+        .mount("/hello", routes![index])
+        .launch()
+        .await?;
+    
+    Ok(())
 }

@@ -8,4 +8,8 @@ edition = "2021"
 [dependencies]
 serde = { version = "1.0.104", features = ["derive"] }
 serde_json = "1.0.48"
-rumqttc = "0.20.0"
+# rumqttc = "0.20.0"
+
+rocket = { version = "0.5.0-rc.2", features = ["json"] }
+paho-mqtt = "0.12"
+rocket_contrib = "0.4.10"

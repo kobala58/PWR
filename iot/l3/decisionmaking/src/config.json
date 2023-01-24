@@ -1,4 +1,4 @@
 {
-  "wattage": 1000,
-  "is_on": true
+  "wattage": 500,
+  "is_on": false
 }

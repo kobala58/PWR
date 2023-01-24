@@ -1,8 +1,11 @@
+from typing import List
 from fastapi import FastAPI
 from fastapi_mqtt import FastMQTT, MQTTConfig
 from fastapi.middleware.cors import CORSMiddleware
 import os
 import json
+
+from pydantic import BaseModel
 
 app = FastAPI()
 
@@ -18,6 +21,10 @@ origins = [
     "*"
 ]
 
+class Config(BaseModel):
+    range: List[float]
+    wattage: int
+
 
 app = FastAPI()
 
@@ -30,6 +37,9 @@ app.add_middleware(
     allow_headers=["*"],
     )
 
+state = {
+        "state": True
+        }
 
 mqtt_config = MQTTConfig()
 
@@ -37,17 +47,15 @@ mqtt = FastMQTT(
     config=mqtt_config
 )
 
-data = "dupa"
+@app.post("/setup")
+async def get_ohlc_data():
+    pass
+
  
-@app.get("/config")
-async def ex_8_Impl():
-    return "In development"
-
 @app.get("/state")
-async def state():
-    global data
-
-    return data
+async def ex_8_Impl():
+    global state
+    return state
 
 
 
@@ -65,3 +73,6 @@ async def message(client, topic, payload, qos, properties):
     dec_payload = payload.decode().replace("\'", "\"") # replace to double-quoted bc JSON requires this 
     dec_jsos  = json.loads(dec_payload)
     print(dec_jsos)
+
+    
+
