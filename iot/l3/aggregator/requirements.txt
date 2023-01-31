@@ -1,0 +1,6 @@
+fastapi==0.89.1
+fastapi_mqtt==1.7
+psycopg2==2.9.5
+pydantic==1.10.2
+redis==4.4.0
+requests==2.28.1

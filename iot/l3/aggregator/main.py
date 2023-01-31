@@ -7,7 +7,7 @@ import json
 
 app = FastAPI()
 
-mqtt_config = MQTTConfig(host = "172.18.0.2",
+mqtt_config = MQTTConfig(host = "mosquitto",
     port= 1883,
     keepalive = 60)
 
@@ -32,7 +32,6 @@ app.add_middleware(
     )
 
 
-mqtt_config = MQTTConfig()
 
 mqtt = FastMQTT(
     config=mqtt_config

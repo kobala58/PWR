@@ -50,14 +50,14 @@ def send_data_to_config():
     pass
 
 def save_message_to_database(data: dict) -> bool:
-    r = redis.Redis(host="0.0.0.0", port=6379, db=0, decode_responses=True)
+    r = redis.Redis(host="cache", port=6379, db=0, decode_responses=True)
     r.incr(data["walor"])
     r.hset(data["walor"]+"_v", mapping=data)
     counter = r.get(data["walor"])
     drv = Queries()
     with open("config.json", "r") as jsonfile:
         config = json.load(jsonfile)
-    if int(config["interval_value"]) == int(counter):
+    if int(config["interval_value"]) <= int(counter):
         res = drv.select_top_walor(data["walor"], int(config["interval_value"]))
         send_data_to_server(list(res), data["walor"])
         r.set(data["walor"], 0)
@@ -77,6 +77,6 @@ def send_data_to_server(data, walor):
             "bid_avg": data[2]
             }
     print(payload)
-    requests.post("http://0.0.0.0:8080/aggregator", json=payload)
+    requests.post("http://172.18.0.1:8080/aggregator", json=payload)
 
 

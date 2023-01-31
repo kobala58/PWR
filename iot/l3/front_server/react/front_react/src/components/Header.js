@@ -13,6 +13,7 @@ function Header() {
                     <Nav className="me-auto">
                         <Nav.Link href="#home">Services</Nav.Link>
                         <Nav.Link href="#add">Dodaj nowy</Nav.Link>
+                        <Nav.Link href="#wykresy">Wykresy</Nav.Link>
                         <NavDropdown title="Inne" id="basic-nav-dropdown">
                             <NavDropdown.Item href="#action/3.1">Github</NavDropdown.Item>
                             <NavDropdown.Item href="#action/3.2">

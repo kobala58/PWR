@@ -2,7 +2,7 @@
   "method": "REST",
   "port": 8080,
   "channel": "/data",
-  "server": "0.0.0.0",
+  "server": "172.18.0.1",
   "type_interval": "count",
   "interval_value": "10"
 }
