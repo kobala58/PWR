@@ -11,7 +11,7 @@ function Plot({ name }) {
     // const service = axios.get('http://localhost:8080/server_list')
     useEffect(() => {
         console.log("test");
-        axios.get('http://0.0.0.0:8083/ohlc?instrument='+name+'&time_unit=hour&time_val=1').then((response) => {
+        axios.get('http://0.0.0.0:8082/ohlc?instrument='+name+'&time_unit=hour&time_val=1').then((response) => {
             setPost(response.data);
             setLoading(false);
         });
@@ -37,7 +37,7 @@ function Plot({ name }) {
                 height: 350
               },
               title: {
-                text: 'CandleStick Chart',
+                text: name,
                 align: 'left'
               },
               xaxis: {
@@ -57,6 +57,7 @@ return (
         options={options}
         series={series}
         type="candlestick"
+        height="300"
         />
     </div>
   )

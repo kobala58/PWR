@@ -6,10 +6,10 @@ class Queries:
     def __init__(self) -> None:
         self.conn = psycopg2.connect(
                 dbname = "main",
-                user="user",
+                user="admin",
                 password="admin",
-                host="0.0.0.0",
-                port=54320
+                host="db",
+                port=5432
                 )
         self.cur = self.conn.cursor(cursor_factory=RealDictCursor)
 

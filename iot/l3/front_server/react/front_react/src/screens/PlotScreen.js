@@ -2,12 +2,13 @@ import { Row, Col } from 'react-bootstrap'
 import React, { useState, useEffect } from 'react'
 import axios from 'axios';
 import Plot from '../components/Plot';
+import Header from '../components/Header';
 
 function PlotScreen(){
     const [post, setPost] = useState([]);
     // const service = axios.get('http://localhost:8080/server_list')
     useEffect(() => {
-        axios.get('http://0.0.0.0:8083/').then((response) => {
+        axios.get('http://0.0.0.0:8082/').then((response) => {
             setPost(response.data);
             console.log(response);
         });

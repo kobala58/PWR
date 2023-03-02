@@ -4,7 +4,7 @@ class Queries:
     def __init__(self) -> None:
         self.conn = psycopg2.connect(
                 dbname = "main",
-                user="user",
+                user="admin",
                 password="admin",
                 host="db",
                 port=5432
