@@ -5,6 +5,9 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import random
 
+import matplotlib
+matplotlib.use('tkagg') # known bug, need to switch rendering engine
+
 def generate_nodes_from_input() -> tuple[nx.Graph, int]:
     nodes_count = int(input("Podaj ilosc wierzcholkow: "))
     G = nx.Graph()
@@ -14,7 +17,9 @@ def generate_nodes_from_input() -> tuple[nx.Graph, int]:
 def ex_1():
     G, nodes_count = generate_nodes_from_input()
     G.add_edges_from([(x,y) for x in range(nodes_count) for y in range(nodes_count) if x != y])
-    pos = nx.circular_layout(G)
+    
+    pos = nx.circular_layout(G) # generate circular layout
+    
     nx.draw_networkx_labels(G, pos)
     nx.draw_circular(G, node_size = 200)
     plt.show()
@@ -24,8 +29,9 @@ def ex_2():
     RANGSIZE_UP = 100
     G, nodes_count = generate_nodes_from_input() # grab graph from user input
     fig, ax = plt.subplots() #create canvas
-    pos = {x:[random.randint(RANGSIZE_DOWN,RANGSIZE_UP), random.randint(RANGSIZE_DOWN,RANGSIZE_UP)] for x in range(nodes_count)} # position in dictionary
-    nx.draw(G, pos=pos, ax=ax)
+    pos = {x:[random.randint(RANGSIZE_DOWN,RANGSIZE_UP), random.randint(RANGSIZE_DOWN,RANGSIZE_UP)] for x in range(nodes_count)} # position saved into dictionary
+    
+    nx.draw(G, pos=pos, ax=ax) # drawing lines below
     nx.draw_networkx_labels(G, pos=pos)
     plt.axis("on")
     ax.set_xlim(RANGSIZE_DOWN-0.1*RANGSIZE_DOWN, RANGSIZE_UP+0.1*RANGSIZE_UP)
@@ -36,7 +42,7 @@ def ex_2():
 def ex_3():
     RANGSIZE_DOWN = 0
     RANGSIZE_UP = 100
-    RADIUS = 5
+    RADIUS = 10
     G, nodes_count = generate_nodes_from_input()
     G = nx.Graph() # non optimal solution but i dont want to repeat code
 
@@ -58,6 +64,7 @@ def ex_3():
             if flag:
                 points.append([node,x,y])
                 pos[node] = [x,y]
+                ax.add_patch(plt.Circle((x,y), RADIUS, fill=False))
                 G.add_node(node)
                 break
             else:
@@ -78,6 +85,6 @@ def ex_3():
     plt.show()
 
 if __name__ == "__main__":
-    ex_1()
-    ex_2()
+    # ex_1()
+    # ex_2()
     ex_3()

@@ -1,10 +1,10 @@
 import numpy as np
 import random
 import matplotlib.pyplot as plt
-from numpy.linalg import inv
 import pandas as pd
 from sklearn.linear_model import LinearRegression
-
+import matplotlib
+matplotlib.use('tkagg')
 
 def add_constant(var: pd.DataFrame) -> np.ndarray:
     """Add column containing 0 to move from y = ax to y = ax + x[0] and change data type from DataFrame to numpy class Grabbed from PNOD notebook."""
@@ -23,6 +23,7 @@ def lin_pred_from_data(data: pd.DataFrame):
     plt.show()
 
 def make_lin_model_from_scikitlearn(data: pd.DataFrame):
+    # TODO
     pass
 
 def ex_1():
