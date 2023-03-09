@@ -5,6 +5,9 @@ from typing import List
 import networkx as nx
 import matplotlib.pyplot as plt
 import random
+import matplotlib
+matplotlib.use('tkagg')
+
 
 def generate_nodes_from_input() -> tuple[nx.Graph, int]:
     nodes_count = int(input("Podaj ilosc wierzcholkow: "))
@@ -98,5 +101,5 @@ def ex_3():
 
 if __name__ == "__main__":
     ex_1()
-    # ex_2()
-    # ex_3()
+    ex_2()
+    ex_3()
