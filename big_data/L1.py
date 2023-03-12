@@ -5,6 +5,7 @@ import pandas as pd
 import matplotlib
 
 # sklearn based imports 
+from sklearn import linear_model
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import LinearRegression
 
@@ -60,11 +61,18 @@ def ex_2():
 
     
 def ex_3():
+    ALPHA = 10
     x_range = np.linspace(0, 10, 100)
     y_range = [random.uniform(7*x-15, 7*x+15) for x in x_range] # create y vals from geogebra tests
+    
+    reg = linear_model.Ridge(alpha=ALPHA, fit_intercept=False)
+    reg.fit(x_range.reshape(-1, 1), y_range)
+    y_pred = reg.predict(x_range.reshape(-1, 1))
+
     plt.scatter(x_range, y_range, s=5)
+    plt.plot(x_range, y_pred)
     plt.ylim(-10,80)
-    # plt.plot(x_range, y_pred, color="green")
+
     plt.show()
 
 
