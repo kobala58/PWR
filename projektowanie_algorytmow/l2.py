@@ -1,4 +1,11 @@
 from dataclasses import dataclass
+from enum import Enum
+from typing import Dict, List
+
+class NodeTypes(Enum):
+    START = "start"
+    END = "end"
+    NORMAL = "normal"
 
 @dataclass
 class Language():
@@ -8,7 +15,7 @@ class Language():
 @dataclass
 class Node():
     name: str
-
+    
     def __post_init__(self):
         self.directions = {}
     
@@ -36,8 +43,16 @@ class Machine():
     """
     Class for simulating machine 
     """
-    nodes: list[Node] = []
+    start_node: str = "q"
+    end_node: str = "q"
+    nodes: Dict = {}
     lang: Language = Language(())
+
+    def __post_init__(self):
+        self.pos = 0
+        
+        # set up curr_node as start node
+        self.curr_node = ""
 
     @classmethod
     def create_nodes_from_dict(cls, nodes_l: dict):
@@ -45,7 +60,7 @@ class Machine():
         for key, val in nodes_l.items():
             tmp_node = Node.from_dict(key, val)
             tmp_nodes.append(tmp_node)
-
+        
         print("Nodes created succesfully")
 
     def __str__(self) -> str:
@@ -57,9 +72,29 @@ class Machine():
         for node in self.nodes:
             for key,val in node.items():
                 nd.add()
- 
+        # TODO 
+        return True
+    
+    def run_test(self, word: list) -> List[bool, str]:
+        """
+        Method to run word in language
+        """
 
-de__name__ == "__main__":
+        # catch not implemented lang or nodes
+        if self.nodes == []:
+            return [False, "Nodes list is empty"]
+        if self.lang.symbols == ():
+            return [False, "Lang is not provided"]
+        
+        for letter in word:
+            # grab start node
+
+            
+
+        
+
+
+if __name__ == "__main__":
     bin = Language((0,1))
     rho = {
             "q0": {0: "q1", 1: "q0"},

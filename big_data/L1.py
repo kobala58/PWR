@@ -9,7 +9,7 @@ from sklearn import linear_model
 from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import LinearRegression
 
-# matplotlib.use('tkagg') # used on my laptop, pip packages seems broken there
+matplotlib.use('tkagg') # used on my laptop, pip packages seems broken there
 
 def add_constant(var: pd.DataFrame) -> np.ndarray:
     """Add column containing 0 to move from y = ax to y = ax + x[0] and change data type from DataFrame to numpy class Grabbed from PNOD notebook."""
@@ -47,6 +47,7 @@ def ex_2():
     x_range = np.linspace(-3, 3, 100)
     y_range = [random.uniform((1/2)*((x+1)**2)-0.5, (1/2)*((x+1)**2)+3) for x in x_range] # create y vals from geogebra tests
     poly = PolynomialFeatures(degree = 2, include_bias=False) # set up polynomial degree. include_bias secures that coefficients by x^0 equals 1 not 0 
+    print(poly)
     p_f = poly.fit_transform(x_range.reshape(-1, 1))
     # print(p_f)
 
@@ -61,11 +62,11 @@ def ex_2():
 
     
 def ex_3():
-    ALPHA = 10
+    ALPHA = 1
     x_range = np.linspace(0, 10, 100)
     y_range = [random.uniform(7*x-15, 7*x+15) for x in x_range] # create y vals from geogebra tests
     
-    reg = linear_model.Ridge(alpha=ALPHA, fit_intercept=False)
+    reg = linear_model.Ridge(alpha=ALPHA, fit_intercept=False) 
     reg.fit(x_range.reshape(-1, 1), y_range)
     y_pred = reg.predict(x_range.reshape(-1, 1))
 
@@ -77,5 +78,7 @@ def ex_3():
 
 
 if __name__ == "__main__":
-    # ex_1()
+    ex_1()
+    ex_2()
     ex_3()
+
