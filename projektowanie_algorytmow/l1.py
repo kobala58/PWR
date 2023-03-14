@@ -19,6 +19,7 @@ def ex_1():
     RADIUS = 10
     G, nodes_count = generate_nodes_from_input()
     G.add_edges_from([(x,y) for x in range(nodes_count) for y in range(nodes_count) if x != y])
+    G.remove_edge(1, 3)
     # pos = nx.circular_layout(G) simple solution provided by Networkx libary
     # we need to implement own solution based on polar coordinate system
     __space = 360/nodes_count # separtaor 
