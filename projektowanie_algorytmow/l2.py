@@ -1,7 +1,6 @@
 from dataclasses import dataclass
 from enum import Enum
-from typing import Dict, List
-import re
+from typing import Dict
 import json
 
 @dataclass
@@ -71,7 +70,7 @@ class Machine():
         """
         Method to run word in language
         """
-
+        # WARNING - spaghetti below
         # check if word is even valid in this language
         if not self.check_integrity(word):
             print("Word is not valid in this lang")
@@ -184,7 +183,8 @@ def ex5(filename: str):
             ).run_test(data["text"])
 
 if __name__ == "__main__":
-    # ex2()
-    # print(ex4("abcd"))
-    # print(ex4("aaaabcd"))
+    ex1()
+    ex2()
+    ex3("a01010010a010101001")
+    ex4("")
     ex5("ex5")
