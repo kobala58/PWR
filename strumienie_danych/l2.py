@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 import numpy as np
 
+import matplotlib
+matplotlib.use('tkagg')
 if __name__ == "__main__":
     x = np.linspace(1,31, 31)
     y = np.random.uniform(5,25,31)
