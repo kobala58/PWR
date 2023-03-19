@@ -6,3 +6,5 @@ ppd/lists/.settings
 ppd/lists/.oplproject
 ppd/lists/.project
 iot/l3/iot_source/.env_1
+ppd/solver/Cargo.lock
+ppd/solver/target

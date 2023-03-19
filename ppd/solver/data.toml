@@ -1,0 +1,15 @@
+[dvars]
+var = ["x1", "x2"]
+dvar_type = "natural"
+
+
+[target]
+opt_type = "maximize"
+eq = "3*x1+4*x2"
+
+[subject]
+data = [
+  "x1+2*x2<=10",
+  "x1+2*x2",
+  "x1+x2<=8"
+]
