@@ -96,6 +96,45 @@ class Machine():
             print(f"Word {word} is invalid")
         print("\n\n")
 
+def ex1():
+    rho = {
+            "q0": {"0": "q1", "1": "q0"},
+            "q1": {"0": "q3", "1": "q2"},
+            "q2": {"0": "q2", "1": "q0"},
+            "q3": {"0": "q2", "1": "q2"},
+            }
+
+    ex1 = Machine(
+            start_node="q0",
+            end_node=["q3"],
+            lang=Language(("0","1")),
+            nodes=rho
+            )
+    # ex1.run_test("1100101011")
+    # ex1.run_test("11100")
+    ex1.run_test(input("Enter word in lang: "))
+
+
+def ex2():
+    rho = {
+            "q0": {"a": "q2", "b": "q2", "c": "q2"},
+            "q1": {"a": "q4", "b": "q0", "c": "q3"},
+            "q2": {"a": "q1", "b": "q1", "c": "q6"},
+            "q3": {"a": "q3", "b": "q3", "c": "q3"},
+            "q4": {"a": "q0", "b": "q5", "c": "q5"},
+            "q5": {"a": "q4", "b": "q4", "c": "q4"},
+            "q6": {"a": "q3", "b": "q3", "c": "q3"},
+            }
+
+    ex2 = Machine(
+            start_node="q0",
+            end_node=["q4", "q5"],
+            lang=Language(("a","b","c")),
+            nodes=rho
+            )
+    # ex1.run_test("1100101011")
+    # ex1.run_test("11100")
+    ex2.run_test(input("Enter word in lang: "))
 
 def ex3(word: str):
     rho = {
@@ -143,51 +182,9 @@ def ex5(filename: str):
             nodes = data["nodes"]
             ).run_test(data["text"])
 
-def ex1():
-    rho = {
-            "q0": {"0": "q1", "1": "q0"},
-            "q1": {"0": "q3", "1": "q2"},
-            "q2": {"0": "q2", "1": "q0"},
-            "q3": {"0": "q2", "1": "q2"},
-            }
-
-    ex1 = Machine(
-            start_node="q0",
-            end_node=["q3"],
-            lang=Language(("0","1")),
-            nodes=rho
-            )
-    # ex1.run_test("1100101011")
-    # ex1.run_test("11100")
-    ex1.run_test(input("Enter word in lang: "))
-
-
-def ex2():
-    rho = {
-            "q0": {"a": "q2", "b": "q2", "c": "q2"},
-            "q1": {"a": "q4", "b": "q0", "c": "q3"},
-            "q2": {"a": "q1", "b": "q1", "c": "q6"},
-            "q3": {"a": "q3", "b": "q3", "c": "q3"},
-            "q4": {"a": "q0", "b": "q5", "c": "q5"},
-            "q5": {"a": "q4", "b": "q4", "c": "q4"},
-            "q6": {"a": "q3", "b": "q3", "c": "q3"},
-            }
-
-    ex2 = Machine(
-            start_node="q0",
-            end_node=["q4", "q5"],
-            lang=Language(("a","b","c")),
-            nodes=rho
-            )
-    # ex1.run_test("1100101011")
-    # ex1.run_test("11100")
-    ex2.run_test(input("Enter word in lang: "))
-
-
 if __name__ == "__main__":
     ex1()
     ex2()
     ex3("a01010010a010101001")
     ex4("")
     ex5("ex5")
-
