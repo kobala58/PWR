@@ -133,7 +133,9 @@ def ex1():
             "q0": {"a": {"to": "q1",
                          "rename": "a_dot",
                          "direction": "left"
-                         }}
+                         },
+                   None:}
+                        
             }
 
     ex1 = Machine(
