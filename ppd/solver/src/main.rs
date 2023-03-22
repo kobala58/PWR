@@ -1,33 +1,11 @@
-use serde::Deserialize;
-use toml::value::Array;
-use std::collections::HashMap;
+#![allow(dead_code, unused)]
+
 use std::fs;
 use std::process::exit;
 use toml;
+extern crate meval; 
+pub mod models;
 
-#[derive(Deserialize)]
-struct Config {
-    dvars: Dvars,
-    target: Target, 
-    subject: Subject,
-}
-
-#[derive(Deserialize)]
-struct Dvars{
-    var: Array,
-    dvar_type: String,
-}
-
-#[derive(Deserialize)]
-struct Target{
-    opt_type: String,
-    eq: String,
-}
-
-#[derive(Deserialize)]
-struct Subject{
-    data: Array,
-}
 
 fn main() {
     let path = std::path::Path::new("./data.toml");
@@ -37,15 +15,20 @@ fn main() {
     };
 
 
-    let config: Config = match toml::from_str(&content){
+    let config: models::Config = match toml::from_str(&content){
         Ok(d) => d,
         Err(_) => {
             eprintln!("Chuj wi: {}", content);
             exit(1);
         }
     };
+    
+    
 
-    println!("{}", config.dvars.var[1]);
+    println!("{:?}", config.dvars.var);
     println!("{}", config.target.opt_type);
     println!("{}", config.subject.data[0]);
+    
+
+    // bind variables to  
 }
