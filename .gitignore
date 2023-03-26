@@ -8,3 +8,6 @@ ppd/lists/.project
 iot/l3/iot_source/.env_1
 ppd/solver/Cargo.lock
 ppd/solver/target
+big_data/l3/target
+big_data/l3/images/0.png
+big_data/l3/images/l3.png

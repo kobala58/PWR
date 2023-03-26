@@ -5,7 +5,7 @@ use std::process::exit;
 use toml;
 extern crate meval; 
 pub mod models;
-
+pub mod parser;
 
 fn main() {
     let path = std::path::Path::new("./data.toml");
@@ -23,11 +23,12 @@ fn main() {
         }
     };
     
-    
+    let coef: Vec<&str> = config.dvars.var.to_vec();
+    let data = parser::extract_coefficients(config.target.eq.as_str(), &coef);
 
-    println!("{:?}", config.dvars.var);
-    println!("{}", config.target.opt_type);
-    println!("{}", config.subject.data[0]);
+    println!("{:?}", data);
+    // println!("{}", config.target.opt_type);
+    // println!("{}", config.subject.data[0]);
     
 
     // bind variables to  
