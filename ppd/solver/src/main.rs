@@ -26,7 +26,8 @@ fn main() {
     println!("{:?}", config.dvars.var);
     println!("{}", config.target.opt_type);
     println!("{}", config.subject.data[0]);
-    let coef: Vec<&str> = config.dvars.var.to_vec();
+    let coef: Vec<String> = config.dvars.var.to_vec().iter()
+        .map(|x| String::from(*x)).collect::<Vec<String>>();
     let data = parser::extract_coefficients(config.target.eq.as_str(), &coef);
 
     println!("{:?}", data);
