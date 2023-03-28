@@ -33,7 +33,7 @@ pub fn test_draw() -> Result<(), Box<dyn std::error::Error>> {
 
 pub fn draw_plots(data: &[Vec<f32>; 4], size: f32) -> Result<(), Box<dyn std::error::Error>>{
 
-    let ranges: [[std::ops::Range<f32>; 2]; 4] = [[0f32..size, -1f32..50f32],[0f32..size, -1f32..1f32],[0f32..size, -1f32..1f32],[0f32..size, 1f32..3f32]]; // ranges of plots
+    let ranges: [[std::ops::Range<f32>; 2]; 4] = [[0f32..size, -1f32..50f32],[0f32..size, -0.5f32..1.5f32],[0f32..size, -2f32..2f32],[0f32..size, 0.5f32..3.5f32]]; // ranges of plots
     let labels: [&str; 4] = ["Generated data", "Min-Max Normalization", "Standarized", "Rescaled"]; 
     let root = BitMapBackend::new("images/l3.png", (500, 1000)).into_drawing_area();
     root.fill(&WHITE)?;

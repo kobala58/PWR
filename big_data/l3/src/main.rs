@@ -27,8 +27,8 @@ fn standard_vec(data: &Vec<u8>) -> Vec<f32> {
             f32::from(*x as f32-mean).powi(2)
         }
     ).collect::<Vec<f32>>();
-    let std_var: f32 = f32::sqrt(sum.iter().sum::<f32>() / vec_len as f32);
-    let std_var_vec: Vec<f32> = data.iter().map(
+    let std_var: f32 = f32::sqrt(sum.iter().sum::<f32>() / vec_len as f32); // std_var = sqrt(sum(x-mean)/len)
+    let std_var_vec: Vec<f32> = data.iter().map(  // (x-mean)/std_var
         |x| {
             (*x as f32 - mean)/std_var
         }
@@ -40,7 +40,7 @@ fn rescale_to_range(data: &Vec<u8>, down: u8, up: u8) -> Vec<f32>{
     let min: f32 = f32::from(*data.iter().min().unwrap()); // find min 
     let max: f32 = f32::from(*data.iter().max().unwrap()); // find max
     let rescaled = data.iter().map(|x|{
-        down as f32 + (((*x as f32 - min)*(up-down) as f32)/(max - min))
+        down as f32 + (((*x as f32 - min)*(up-down) as f32)/(max - min)) // y = down + (x-min)(up-down)/(max-min)
     }).collect::<Vec<f32>>();
     rescaled
 }
