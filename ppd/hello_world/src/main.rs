@@ -28,21 +28,21 @@ fn main() {
                                     VariableValue::Continuous(17.5),
                                     VariableValue::Continuous(42.5)]);
 
-    ex1();
+    // ex1();
 }
 
 
-fn generate_data_vec(size: usize) -> Vec<u8>{
-    let range = Uniform::new(0,50);
-    let mut rng = rand::thread_rng(); 
-    let vals: Vec<u8> = range.sample_iter(&mut rng).take(size).map(|x| x as u8).collect();
-    vals
-}
+// fn generate_data_vec(size: usize) -> Vec<u8>{
+//     let range = Uniform::new(0,50);
+//     let mut rng = rand::thread_rng(); 
+//     let vals: Vec<u8> = range.sample_iter(&mut rng).take(size).map(|x| x as u8).collect();
+//     vals
+// }
 
-fn ex1() {
-    let env = Env::new().unwrap();
-    let mut prob = Problem::new(&env, "Problem trojpodzialu").unwrap();
-    prob.set_objective_type(ObjectiveType::Maximize).unwrap();
-    let numbers: Vec<u8>=  generate_data_vec(10*3);
+// fn ex1() {
+//     let env = Env::new().unwrap();
+//     let mut prob = Problem::new(&env, "Problem trojpodzialu").unwrap();
+//     prob.set_objective_type(ObjectiveType::Maximize).unwrap();
+//     let numbers: Vec<u8>=  generate_data_vec(10*3);
 
-}
+// }
