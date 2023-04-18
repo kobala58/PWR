@@ -5,6 +5,9 @@ from sklearn import preprocessing
 import matplotlib.pyplot as plt
 from sklearn.decomposition import TruncatedSVD
 from sklearn.discriminant_analysis import LinearDiscriminantAnalysis
+import matplotlib
+
+matplotlib.use('tkagg') # used on my laptop, pip packages seems broken there
 
 def pca_redu(data, size: int, labels):
     _pca = PCA(n_components=size) # init PCA to reduce to size declared 
@@ -56,8 +59,9 @@ def ex2():
     pre_data = [datasets.fetch_california_housing(), datasets.load_breast_cancer()]
     titles = ["California Houses", "Breast Cancer"]
     for i,x in enumerate(pre_data):
-        data = std(x.data)
-        redu = pca_redu(data, 2)
+        # data = std(x.data)
+        data = x.data
+        redu = pca_redu(data, 2, x.target)
         plot_it(redu, x, f"PCA, Dataset: {titles[i]}")
 
 def ex3():
@@ -65,6 +69,14 @@ def ex3():
     titles = ["Iris", "Wine", "Diabetes"]
     for i,x in enumerate(pre_data):
         data = std(x.data)
+        redu = lda_redu(data, 2, x.target)
+        plot_it(redu, x, f"LDA, Dataset: {titles[i]}")
+
+def ex3_2nd_try():
+    pre_data = [datasets.load_iris(), datasets.load_wine(), datasets.load_diabetes()]
+    titles = ["Iris", "Wine", "Diabetes"]
+    for i,x in enumerate(pre_data):
+        data = x.data
         redu = lda_redu(data, 2, x.target)
         plot_it(redu, x, f"LDA, Dataset: {titles[i]}")
 
@@ -78,7 +90,8 @@ def ex4():
 
 
 if __name__ == "__main__":
-    ex1()
-    ex2()
+    # ex1()
+    # ex2()
     ex3()
-    ex4()           
+    ex3_2nd_try()
+    # ex4()           

@@ -88,10 +88,10 @@ fn entrophy(time_series: &Vec<u8>) -> f32{
     }
     entrophy
 }
+
 /**
 Najpierw musimy zdefiniować, jakie szeregi czasowe będą używane do obliczania wymiaru fraktalnego. 
 Jedną z popularnych metod jest tzw. metoda skali i kroju, która polega na zmniejszaniu skali i obliczaniu liczby pudełek wymaganych do pokrycia fraktala przy każdej skali.
-
 * */
 
 fn fractal_dim(time_series: &Vec<u8>) -> f64 {
