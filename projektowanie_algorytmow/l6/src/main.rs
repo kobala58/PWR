@@ -332,13 +332,13 @@ fn ex4(){
 }
 
 fn main() {
-    // let n = 192;
-    // let factors = prime_factors(n);
-    // println!("Czynniki pierwsze liczby {}: {:?}", n, factors);
+    let n = 192;
+    let factors = prime_factors(n);
+    println!("Czynniki pierwsze liczby {}: {:?}", n, factors);
 
-    // let p = 30;
-    // let primes = sieve_of_eratosthenes(p);
-    // println!("Liczby pierwsze mniejsze lub równe {}: {:?}", p, primes);
+    let p = 30;
+    let primes = sieve_of_eratosthenes(p);
+    println!("Liczby pierwsze mniejsze lub równe {}: {:?}", p, primes);
 
     ex4();
 }

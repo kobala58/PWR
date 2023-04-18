@@ -111,8 +111,10 @@ def ex1():
             nodes=rho
             )
     # ex1.run_test("1100101011")
-    # ex1.run_test("11100")
-    ex1.run_test(input("Enter word in lang: "))
+    ex1.run_test("001100")
+    ex1.run_test("010100")
+    ex1.run_test("10110")
+    # ex1.run_test(input("Enter word in lang: "))
 
 
 def ex2():
@@ -134,7 +136,10 @@ def ex2():
             )
     # ex1.run_test("1100101011")
     # ex1.run_test("11100")
-    ex2.run_test(input("Enter word in lang: "))
+    # ex2.run_test(input("Enter word in lang: "))
+    ex2.run_test("aba")
+    ex2.run_test("cba")
+    ex2.run_test("abcbc")
 
 def ex3(word: str):
     rho = {
@@ -185,6 +190,13 @@ def ex5(filename: str):
 if __name__ == "__main__":
     ex1()
     ex2()
-    ex3("a01010010a010101001")
-    ex4("")
+    
+    ex3("aa1")
+    ex3("a011a10")
+    ex3("a0110")
+    ex3("10011")
+    
+    ex4("bc")
+    ex4("aabcddd")
+    ex4("dddbcaa")
     ex5("ex5")

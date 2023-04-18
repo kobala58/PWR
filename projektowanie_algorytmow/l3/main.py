@@ -43,10 +43,17 @@ class TuringMachine:
             
             old_tape = tape[idx]
             old_state = curr_node
-            tape[idx] = self.edges[curr_node][old_tape][0]
-            curr_node = self.edges[curr_node][old_tape][1]
-            print(curr_node, tape, self.edges[old_state][old_tape][2])
-
+            try:
+                tape[idx] = self.edges[curr_node][old_tape][0]
+                curr_node = self.edges[curr_node][old_tape][1]
+                print(curr_node, tape, self.edges[old_state][old_tape][2])
+            except KeyError:
+                print("----------ERROR----------")
+                print(f"Key Error Dump:\n Node: {self.edges[curr_node]}")
+                print(f"Cannot find key: {old_tape}")
+                print('-------------------------\n\n')
+                return 
+                
             if self.edges[old_state][old_tape][2] == "R":
                 idx += 1
                 if idx == len(tape) - 1: # detect end
@@ -68,18 +75,18 @@ class TuringMachine:
 def ex1():
     test = TuringMachine.read_from_json("e1")
     # test.run_word(input("Podaj slowo: "))
-    test.run_word("aaaaa")
+    test.run_word("aaa")
 
 def ex2():
     test = TuringMachine.read_from_json("e2")
-    test.run_word("1b1")
+    test.run_word("1b1b0")
 
 def ex3():
     print("---E3---")
     test = TuringMachine.read_from_json("e3")
     test.run_word("x")
-    # test.run_word("hexhf")
-    # test.run_word("hexhff")
+    test.run_word("hexhf")
+    test.run_word("hexhff")
 
 def ex4():
     print("---E4---")
