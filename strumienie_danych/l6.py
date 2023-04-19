@@ -2,7 +2,8 @@ import wfdb
 
 import neurokit2 as nk
 import matplotlib.pyplot as plt
-
+import matplotlib
+matplotlib.use('TkAgg')
 data = wfdb.rdrecord("JS00008", pn_dir="ecg-arrhythmia/WFDBRecords/01/010")
 
 signals, fields = nk.ecg_process(data.p_signal[:,0], sampling_rate=data.fs)
