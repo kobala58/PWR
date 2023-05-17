@@ -1,13 +1,13 @@
 import matplotlib.pyplot as plt
 import wfdb
 from matplotlib.animation import FuncAnimation
-import matplotlib
 from matplotlib.widgets import Button
-# matplotlib.use('TkAgg')
+import matplotlib
+matplotlib.use('TkAgg')
 
 fig, axes = plt.subplots(figsize=(10, 6))
-data = wfdb.rdrecord('S0088_ST_V1', pn_dir='taichidb/1.0.2/Single-task/').p_signal[:, 0]
 
+data = wfdb.rdrecord("JS00002", pn_dir="ecg-arrhythmia/WFDBRecords/01/010").p_signal[:, 0]
 t = range(len(data))
 x, y = [], []
 
@@ -16,7 +16,6 @@ y_height = 1
 
 is_animation_running = False
 is_animation_changed = False
-print(data)
 
 def animate(num):
     global is_animation_changed
@@ -24,7 +23,7 @@ def animate(num):
         x.append(t[num])
         y.append(data[num])
         axes.cla()  # Clear the axes
-        axes.plot(x, y, scaley=True, scalex=True, color='green')
+        axes.plot(x, y, scaley=True, scalex=True, color='blue')
         axes.set_xlim(num - x_width, num)
         axes.set_ylim(data[num] - y_height, data[num] + y_height)
         if num >= x_width:
@@ -67,7 +66,7 @@ def move_left(event):
             global is_animation_changed
             is_animation_changed = True
         axes.cla()  # Clear the axes
-        axes.plot(x, y, scaley=True, scalex=True, color='green')
+        axes.plot(x, y, scaley=True, scalex=True, color='blue')
         axes.set_xlim(current_frame - 25 - x_width, current_frame - 25)
         axes.set_ylim(data[current_frame - 25] - y_height, data[current_frame - 25] + y_height)
         plt.draw()
@@ -84,7 +83,7 @@ def move_right(event):
             global is_animation_changed
             is_animation_changed = True
         axes.cla()  # Clear the axes
-        axes.plot(x, y, scaley=True, scalex=True, color='green')
+        axes.plot(x, y, scaley=True, scalex=True, color='blue')
         axes.set_xlim(current_frame + 25 - x_width, current_frame + 25)
         axes.set_ylim(data[current_frame + 25] - y_height, data[current_frame + 25] + y_height)
         plt.draw()
@@ -92,23 +91,23 @@ def move_right(event):
 
 
 # Add buttons
-start_button_ax = fig.add_axes([0.9, 0.9, 0.1, 0.08])
+start_button_ax = fig.add_axes([0.3, 0, 0.1, 0.05])
 start_button = Button(start_button_ax, 'Start')
 start_button.on_clicked(start_animation)
 
-stop_button_ax = fig.add_axes([0.9,0.8, 0.1,0.08])
+stop_button_ax = fig.add_axes([0.4, 0, 0.1, 0.05])
 stop_button = Button(stop_button_ax, 'Stop')
 stop_button.on_clicked(stop_animation)
 
-screenshot_button_ax = fig.add_axes([0.9, 0.7, 0.1, 0.08])
+screenshot_button_ax = fig.add_axes([0.5, 0, 0.1, 0.05])
 screenshot_button = Button(screenshot_button_ax, 'Aktualny stan')
 screenshot_button.on_clicked(save_screenshot)
 
-move_left_button_ax = fig.add_axes([0.9, 0.6, 0.1, 0.08])
+move_left_button_ax = fig.add_axes([0.6, 0, 0.1, 0.05])
 move_left_button = Button(move_left_button_ax, 'Lewo')
 move_left_button.on_clicked(move_left)
 
-move_right_button_ax = fig.add_axes([0.9, 0.5, 0.1, 0.08])
+move_right_button_ax = fig.add_axes([0.7, 0, 0.1, 0.05])
 move_right_button = Button(move_right_button_ax, 'Prawo')
 move_right_button.on_clicked(move_right)
 
