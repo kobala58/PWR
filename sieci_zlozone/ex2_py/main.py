@@ -61,9 +61,12 @@ def create_graph(matrix: pd.DataFrame):
     return ret_nx_net
 
 def generate_graph_info(data: nx.Graph, output: str):
-    print(list(nx.isolates(data))) 
+    # print(list(nx.isolates(data))) 
     data.remove_nodes_from(list(nx.isolates(data)))
-    print(nx.is_connected(data))
+    # print(nx.is_connected(data))
+
+    # vtx = np.random.choice(graph.nodes())
+
     info = {
             "degree": len(data),
             "size": len(data.edges()),
