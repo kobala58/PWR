@@ -6,38 +6,41 @@ fn sigmoid(x: f32) -> f32{
     1f32/(1f32+f32::exp(-x)) // 1/(1-e^-x)
 }
 
+fn sigmoid_deriative(x: f32) -> f32{
+    f32::exp(x)/((1f32+f32::exp(x)).powi(2))
+}
+
 #[allow(dead_code)]
 fn calc_node(params: &Vec<f32>, weights: &Vec<f32>) -> f32 {
-    params.iter().zip(weights.iter()).map(|(x, y)| x * y).sum() // techinicznie może da się to zrobić lepiej ale ja na ten moment tego nie postrafie
+    params.iter().zip(weights.iter()).map(|(x, y)| x * y).sum()  // techinicznie może da się to zrobić lepiej ale ja na ten moment tego nie postrafie
 }
 
 #[allow(dead_code)]
 #[allow(unused_variables)]
-fn learn(inputs: &Vec<f32>,
-        target: &f32, weights: &mut Vec<Vec<f32>>, bias: &mut Vec<f32>, out_weights: &mut Vec<f32>) {
-    // przygotuj 
+
+fn learn(inputs: &Vec<Vec<f32>>, target: &Vec<f32>, weights: &mut Vec<Vec<f32>>, bias: &mut Vec<f32>, out_weights: &mut Vec<f32>, epochs: usize) {
+    // main function for learing 
     
-    // let s1 = inputs[0]*weights[0][0]+inputs[1]*weights
+    // TODO: TEMP SOLUTION. MAKE AVIABLE TO SWITCH ACTIVATORS
+    let z1: Vec<f32> = inputs.iter().map(|inp| {
+        calc_node(inp, &weights[0]) + bias[0]
+    }).collect(); // all inputs 
+    let z2: Vec<f32> = inputs.iter().map(|inp| {
+        calc_node(inp, &weights[1]) + bias[1]
+    }).collect();
+    let o: Vec<f32> = z1.iter().zip(z2.iter()).map(|(res1, res2)| {
+        sigmoid(sigmoid(res1)*out_weights[0] + sigmoid(res2)*out_weights[1] + bias[2])
+    }).collect();
+    
+    let o_errors: Vec<f32> = target.iter().zip(o.iter()).map(|(tar, pred)| {
+        tar - pred
+    }).collect(); 
 
-    let mut tmp: Vec<f32> = Vec::new(); //temp vec fot storing calculated after activation
-    for (idx,w) in weights.iter().enumerate(){ // calc for each node
-        // println!("--------------------------");
-        // println!("Input: {:?}", inputs);
-        // println!("");
-        // println!("w{}: {:?}", idx+1,w);
-        // let node_calc_primitive = inputs[0]*w[0]+inputs[1]*w[1]+bias[idx];
-        let node_calc = inputs.iter().enumerate().map(|(i,x)| x*w[i]).sum::<f32>() + bias[idx]; //for each weight multiply it by every input 
-        // println!("Primitive: {}", node_calc_primitive);
-        // println!("Functional: {}", node_calc);
-        tmp.push(sigmoid(node_calc));
-    }
-    let output: f32 = sigmoid(calc_node(&tmp, &out_weights) + bias[2]);
-    let error: f32 = target - output;
-    let derror: f32 =
+    let dz: Vec<f32> = o_errors.iter().zip(o).map(|(err, out)|{
+        err*sigmoid_deriative(out)
+    }).collect();
 
-    println!("{:?}", tmp);
-
-
+    let 
 
 }
 
@@ -71,15 +74,8 @@ fn main() {
      
     let val:f32 = sigmoid(1f32);
 
-    for _ in 1..EPOCHS{
-        let mut rnd_vec: Vec<usize> = (0..4).collect();
-        rnd_vec.shuffle(&mut thread_rng());
-        for idx in rnd_vec.into_iter(){
-            learn(&inputs[idx], &outputs[idx], &mut weights, &mut bias, &mut output_weights);
-        }
-    }
 
-    // learn(EPOCHS, &inputs, &outputs, &mut weights, &mut bias, &mut output_weights, 0.5f32);
+    learn(&inputs, &outputs, &mut weights, &mut bias, &mut output_weights, EPOCHS);
 
     println!("{}", val);
 }
