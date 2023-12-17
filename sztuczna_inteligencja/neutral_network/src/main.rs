@@ -18,7 +18,9 @@ fn calc_node(params: &Vec<f32>, weights: &Vec<f32>) -> f32 {
 #[allow(dead_code)]
 #[allow(unused_variables)]
 
-fn learn(inputs: &Vec<Vec<f32>>, target: &Vec<f32>, weights: &mut Vec<Vec<f32>>, bias: &mut Vec<f32>, out_weights: &mut Vec<f32>, epochs: usize) {
+fn learn(inputs: &Vec<Vec<f32>>, target: &Vec<f32>,
+        weights: &mut Vec<Vec<f32>>, bias: &mut Vec<f32>,
+        out_weights: &mut Vec<f32>, activator: fn(f32) -> f32, epochs: usize) {
     // main function for learing 
     
     // TODO: TEMP SOLUTION. MAKE AVIABLE TO SWITCH ACTIVATORS
@@ -29,19 +31,30 @@ fn learn(inputs: &Vec<Vec<f32>>, target: &Vec<f32>, weights: &mut Vec<Vec<f32>>,
         calc_node(inp, &weights[1]) + bias[1]
     }).collect();
     let o: Vec<f32> = z1.iter().zip(z2.iter()).map(|(res1, res2)| {
-        sigmoid(sigmoid(res1)*out_weights[0] + sigmoid(res2)*out_weights[1] + bias[2])
+        sigmoid(sigmoid(*res1)*out_weights[0] + sigmoid(*res2)*out_weights[1] + bias[2])
     }).collect();
     
     let o_errors: Vec<f32> = target.iter().zip(o.iter()).map(|(tar, pred)| {
         tar - pred
     }).collect(); 
-
     let dz: Vec<f32> = o_errors.iter().zip(o).map(|(err, out)|{
         err*sigmoid_deriative(out)
     }).collect();
 
-    let 
+    //
+    //--v
+    //          out_a -> wynik
+    //(z2 | a2)-()-^
+    //
+    let error: f32 = 0.0;
+    for (inp, out) in inputs.iter().zip(target){
+        let z1: f32 = calc_node(inp, &weights[0]) + bias[0];
+        let z2: f32 = calc_node(inp, &weights[1]) + bias[1];
+        let pred: f32 = activator(z1) * out_weights[0] + activator(z2) * out_weights[1] + bias[3];
+        let error: f32 = out - activator(pred);
 
+
+        }
 }
 
 #[allow(dead_code)]
@@ -75,7 +88,7 @@ fn main() {
     let val:f32 = sigmoid(1f32);
 
 
-    learn(&inputs, &outputs, &mut weights, &mut bias, &mut output_weights, EPOCHS);
+    learn(&inputs, &outputs, &mut weights, &mut bias, &mut output_weights, sigmoid, EPOCHS);
 
     println!("{}", val);
 }
