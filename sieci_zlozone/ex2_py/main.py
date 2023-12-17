@@ -1,6 +1,7 @@
 import networkx as nx
 import pandas as pd
 from pyvis.network import Network
+import numpy as np
 
 def open_data(filename: str="./data.csv", named_row: bool = False) -> pd.DataFrame:
     if named_row:
@@ -63,18 +64,48 @@ def create_graph(matrix: pd.DataFrame):
 def generate_graph_info(data: nx.Graph, output: str):
     # print(list(nx.isolates(data))) 
     data.remove_nodes_from(list(nx.isolates(data)))
+    data.remove_nodes_from(['Unnamed: 0'])
     # print(nx.is_connected(data))
 
-    # vtx = np.random.choice(graph.nodes())
+
+    betweenness = nx.betweenness_centrality(data, normalized=True, endpoints=False)
+    edge_betweenness = nx.edge_betweenness_centrality(data, normalized=True)
+
+    #get random node
+    nd = np.random.choice(data.nodes())
+    # Pośrednictwo
+
+    print(f"Węzeł z maksymalnym pośrednictwem: {max(betweenness, key=betweenness.get)} - {max(betweenness.values())} ")
+
+    # K-spójność
+
+    print(f"K-spójność wierzchołkowa: {nx.node_connectivity(data)} ")
+    print(f"K-spójność krawędziowa: {nx.edge_connectivity(data)} ")
+
+    # Kliki
+
+    print(f"Największa klika w grafie oraz ich liczba: {max([len(x) for x in list(nx.find_cliques(data))])}, {len(list(nx.find_cliques(data)))}")
+
+    # Pośrednictwo krawędzi
+
+    print(f"Krawędź z maksymalnym pośrednictwem: {max(edge_betweenness, key=edge_betweenness.get)} - {max(edge_betweenness.values())} ")
+    print(f"Krawędź z minimalnym pośrednictwem: {min(edge_betweenness, key=edge_betweenness.get)} - {min(edge_betweenness.values())} ")
 
     info = {
+            "is_conected": nx.is_connected(data),
             "degree": len(data),
             "size": len(data.edges()),
             "density": nx.density(data),
             "diameter": nx.diameter(data),
-            "avg_path_len": nx.average_shortest_path_length(data)
+            "avg_path_len": nx.average_shortest_path_length(data),
+            "rnd_node_name": nd,
+            "rnd_node_defree": nx.degree(data, nd),
+            "avg_closeness_centr": nx.closeness_centrality(data, u=nd),
             }
-    print(info)
+    
+    for key, val in info.items():
+        print(f"{key}: {val}")
+    # print(info)
 
 MINIMAL_CONN_CNT = 50
 
