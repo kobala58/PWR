@@ -61,12 +61,23 @@ fn calc_node(params: &Vec<f32>, weights: &Vec<f32>) -> f32 {
 
 
 fn learn(inputs: &Vec<Vec<f32>>, target: &Vec<f32>,
-        weights: &mut Vec<Vec<f32>>, out_weights: &mut Vec<f32>, activator: fn(f32) -> f32,
-        activator_deriative: fn(f32) -> f32, momentum: bool,
-        epochs: usize, n: f32, alpha: f32) -> Vec<f32>{
+        weights: &mut Vec<Vec<f32>>, bias: &mut Vec<f32>,
+        out_weights: &mut Vec<f32>, activator: fn(f32) -> f32, dactivator: fn(f32),epochs: usize) {
     // main function for learing 
-    
-    let mut vm: Vec<Vec<f32>>= weights.iter().map(|x|{ x.iter().map(|_y| {1f32}).collect()}).collect();
+    let err: f32 = 0.0;
+    let n: f32 = 1.0;
+    // here we can implement loop
+
+    // TODO: TEMP SOLUTION. MAKE AVIABLE TO SWITCH ACTIVATORS
+    let z1: Vec<f32> = inputs.iter().map(|inp| {
+        calc_node(inp, &weights[0]) + bias[0]
+    }).collect(); // all inputs 
+    let z2: Vec<f32> = inputs.iter().map(|inp| {
+        calc_node(inp, &weights[1]) + bias[1]
+    }).collect();
+    let o: Vec<f32> = z1.iter().zip(z2.iter()).map(|(res1, res2)| {
+        sigmoid(sigmoid(*res1)*out_weights[0] + sigmoid(*res2)*out_weights[1] + bias[2])
+    }).collect();
     
     let mut wm: Vec<f32> = out_weights.iter().map(|_x|{1f32}).collect();
 
