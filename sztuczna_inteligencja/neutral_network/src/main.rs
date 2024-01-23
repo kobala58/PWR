@@ -20,9 +20,12 @@ fn calc_node(params: &Vec<f32>, weights: &Vec<f32>) -> f32 {
 
 fn learn(inputs: &Vec<Vec<f32>>, target: &Vec<f32>,
         weights: &mut Vec<Vec<f32>>, bias: &mut Vec<f32>,
-        out_weights: &mut Vec<f32>, activator: fn(f32) -> f32, epochs: usize) {
+        out_weights: &mut Vec<f32>, activator: fn(f32) -> f32, dactivator: fn(f32),epochs: usize) {
     // main function for learing 
-    
+    let err: f32 = 0.0;
+    let n: f32 = 1.0;
+    // here we can implement loop
+
     // TODO: TEMP SOLUTION. MAKE AVIABLE TO SWITCH ACTIVATORS
     let z1: Vec<f32> = inputs.iter().map(|inp| {
         calc_node(inp, &weights[0]) + bias[0]
@@ -47,14 +50,26 @@ fn learn(inputs: &Vec<Vec<f32>>, target: &Vec<f32>,
     //(z2 | a2)-()-^
     //
     let error: f32 = 0.0;
-    for (inp, out) in inputs.iter().zip(target){
-        let z1: f32 = calc_node(inp, &weights[0]) + bias[0];
-        let z2: f32 = calc_node(inp, &weights[1]) + bias[1];
-        let pred: f32 = activator(z1) * out_weights[0] + activator(z2) * out_weights[1] + bias[3];
-        let error: f32 = out - activator(pred);
+    while true{
+        for (inp, out) in inputs.iter().zip(target){
+            let z1: f32 = calc_node(inp, &weights[0]) + bias[0];
+            let z2: f32 = calc_node(inp, &weights[1]) + bias[1];
+            let pred: f32 = activator(z1) * out_weights[0] + activator(z2) * out_weights[1] + bias[3];
+            let error: f32 = out - activator(pred);
+            let errorw: f32 = dactivator(error.powi(2));
+
+            if momentum == true{
+            weights.iter().map(|w|{
+                    w[0]+
+                })
+            }
+            else{
+            
+            }
 
 
-        }
+            }
+    }
 }
 
 #[allow(dead_code)]
