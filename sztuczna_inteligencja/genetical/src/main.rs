@@ -1,5 +1,5 @@
 use core::panic;
-use std::{usize, io};
+use std::usize;
 use meval::{self};
 use rand::Rng;
 use plotters::prelude::*;
@@ -48,12 +48,14 @@ fn segment_gen(val_vec: Vec<f64>) -> Vec<f64>{
 
 #[allow(unused_variables)]
 fn main() -> Result<(), Box<dyn std::error::Error>> {
-    const EPOCHS: i32 = 200;
-    const POPULATION_SIZE: i32 = 500;
+    
+    // CONSTS
+    const EPOCHS: i32 = 40;
+    const POPULATION_SIZE: i32 = 80;
     const GENOMS_SIZE: i32 = 12;
     const PC: f32 = 0.5;
     const PM: f32 = 0.005;
-
+    const DRAW_GIF: bool = true;
 
     let input = dialog::Input::new("Please enter your function")
     .title("Funkcja")
@@ -67,7 +69,8 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     // STATS GATHER 
     let mut fit_history: Vec<f64> = Vec::new();
     let mut best_history: Vec<f64> = Vec::new();
-    
+    let root = BitMapBackend::gif("out.gif", (800, 600), EPOCHS as u32)?.into_drawing_area();
+ 
     // println!("{:?}", eval_pop);
     for idx in 0..EPOCHS{
         let abs_max = eval_pop.iter().fold(f64::NAN, |a, &b| (a.abs()).max(b.abs()));
@@ -94,9 +97,10 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             }
         }
 
-        // breeding 
+        // BREEDING 
         let mut babies: Vec<Vec<bool>> = chosen.clone();
         // println!("babies: {:?}", &babies);
+
         for _ in 0..POPULATION_SIZE/2{
             let mut rng = rand::thread_rng();
             let two_idx = rand::seq::index::sample(&mut rng, POPULATION_SIZE as usize, 2).into_vec();
@@ -106,6 +110,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                 // println!("cros");
                 let mut rng = rand::thread_rng();
                 let r = rng.gen_range(1..GENOMS_SIZE) as usize;
+
 
                 let baby1 = [&chosen[two_idx[0]][..r], &chosen[two_idx[1]][r..]].concat();
                 let baby2 = [&chosen[two_idx[1]][..r], &chosen[two_idx[0]][r..]].concat();
@@ -127,19 +132,66 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
                     babies[k][m] = !babies[k][m];
                 }
             } 
-        }
-        
+        } 
         population = babies;
         eval_pop = eval_population(&function, &population);
+        
+        // GIF DRAWING
+        if DRAW_GIF{
+        root.fill(&WHITE)?;
+        
+
+        let x_axis = (-8f64..8f64).step(0.1);
+
+        let mut cc = ChartBuilder::on(&root)
+            .margin(5)
+            .set_all_label_area_size(50)
+            .caption(format!("Algorytm genetyczne generacja: {}", idx), ("sans-serif", 40))
+            .build_cartesian_2d(-8f64..8f64, -0f64..100f64)?;
+
+        cc.configure_mesh()
+            .x_labels(20)
+            .x_desc("X")
+            .y_labels(10)
+            .y_desc("Wartosc funkcji")
+            .disable_mesh()
+            .x_label_formatter(&|v| format!("{:.1}", v))
+            .y_label_formatter(&|v| format!("{:.1}", v))
+            .draw()?;
+
+        cc.draw_series(LineSeries::new(x_axis.values().map(|x| (x, function(x))), &RED))?
+            .label(format!("Funkcja minimalizowana: {}", input))
+            .legend(|(x, y)| PathElement::new(vec![(x, y), (x+20 , y)], RED));
+
+
+        cc.configure_series_labels().border_style(BLACK).draw()?;
+
+
+        // Otherwise you can use a function to construct your pointing element yourself
+        cc.draw_series(PointSeries::of_element(
+            population.iter().map(|x| (read_value(&x), function(read_value(&x)))),
+            5,
+            ShapeStyle::from(&RED).filled(),
+            &|coord, size, style| {
+                EmptyElement::at(coord)
+                    + Circle::new((0, 0), size, style)
+                    // + Text::new(format!("{:?}", coord), (0, 15), ("sans-serif", 15))
+            },
+        ))?;
+
+
+        root.present()?;
+        }
+
 
     }
 
-
+    
     let root_area = BitMapBackend::new("sample.png", (1024, 768)).into_drawing_area();
 
     root_area.fill(&WHITE)?;
 
-    let root_area = root_area.titled("Final", ("sans-serif", 60))?;
+    let root_area = root_area.titled("Algorytm genetyczny", ("sans-serif", 60))?;
 
     let (upper, lower) = root_area.split_vertically(512);
 
@@ -148,7 +200,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
     let mut cc = ChartBuilder::on(&upper)
         .margin(5)
         .set_all_label_area_size(50)
-        .caption("Algorytmy genetyczne", ("sans-serif", 40))
+        .caption(format!("Osobniki: {}, Generacje: {}, najlepszy osobnik ", POPULATION_SIZE, EPOCHS), ("sans-serif", 40))
         .build_cartesian_2d(-8f64..8f64, -0f64..100f64)?;
 
     cc.configure_mesh()
@@ -168,13 +220,6 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     cc.configure_series_labels().border_style(BLACK).draw()?;
 
-    /*
-    // It's possible to use a existing pointing element
-     cc.draw_series(PointSeries::<_, _, Circle<_>>::new(
-        (-3.0f32..2.1f32).step(1.0).values().map(|x| (x, x.sin())),
-        5,
-        Into::<ShapeStyle>::into(&RGBColor(255,0,0)).filled(),
-    ))?;*/
 
     // Otherwise you can use a function to construct your pointing element yourself
     cc.draw_series(PointSeries::of_element(
@@ -195,7 +240,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             .y_label_area_size(30)
             .margin_right(20)
             .caption(format!("Avg fit",), ("sans-serif", 40))
-            .build_cartesian_2d(0f64..100f64, 0f64..50f64)?;
+            .build_cartesian_2d(0f64..EPOCHS as f64, 0f64..50f64)?;
         cc.configure_mesh()
             .x_labels(5)
             .y_labels(3)
@@ -213,7 +258,7 @@ fn main() -> Result<(), Box<dyn std::error::Error>> {
             .y_label_area_size(30)
             .margin_right(20)
             .caption(format!("Best fit", ), ("sans-serif", 40))
-            .build_cartesian_2d(0f64..100f64, 0f64..90f64)?;
+            .build_cartesian_2d(0f64..EPOCHS as f64, 0f64..90f64)?;
         cc.configure_mesh()
             .x_labels(5)
             .y_labels(3)
