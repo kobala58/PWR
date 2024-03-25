@@ -27,27 +27,32 @@ START
     movwf 0x25 ;init main timer value
 
 LOOP
-    CALL INPDETECT
     movf 0x20, W
     movwf PORTA
     CALL LEDCHECK
     goto CNT1    
 
 CNT1
-    
+    CALL INPDETECT
     movlw 0xFF
     movwf 0x26 ;nabij na 0x26 255
     decf 0x25 ; zbij -1 z glownego cntra
     btfsc STATUS,Z ;sprawdz zerowanie głównego cntra
     goto LOOP
 
-CNT2
-    CALL INPDETECT
-    decf 0x26
+CNT2 
+    movlw 0x02 ; 
+    movwf 0x27 ; Przeka? warto?? z W do 0x26
+    decf 0x26 ; Dekrementuj warto?? w 0x26
+    btfsc STATUS,Z ; Sprawd?, czy flaga Z jest ustawiona
+    goto CNT1 ; Je?li tak, przejd? do etykiety LOOP1
+    
+CNT3
+    decf 0x27
     btfsc STATUS,Z
-    goto CNT1
     goto CNT2
-
+    goto CNT3
+    
 INPDETECT
     btfsc PORTC, 0
     bsf 0x20, 0

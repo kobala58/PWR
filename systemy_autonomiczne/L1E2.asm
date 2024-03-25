@@ -5,6 +5,8 @@ goto START
 MAIN_PROG CODE
 
 START
+    ; CONSTS
+    LEDFLAGS equ 0x20
     bcf STATUS, RP1
     bsf STATUS, RP0
     movlw 0x00
@@ -16,7 +18,7 @@ START
     movwf PORTA
 
     movlw 0x00
-    movwf 0x20 
+    movwf LEDFLAG 
     
 LOOP
     btfsc PORTC, 0
@@ -31,35 +33,35 @@ LOOP
     goto LOOP
 
 LED1
-    movlw b'00000001'
-    XORWF 0x20,1
-    movf 0x20, W
+    movlw 0x01
+    XORWF LEDFLAG,0
+    ; movf LEDFLAG, W
     movwf PORTA
     btfsc PORTC, 0
     goto $-1
     RETURN
 
 LED2
-    movlw b'00000010'
-    XORWF 0x20,1
-    movf 0x20, W
+    movlw Ox02
+    XORWF LEDFLAG,1
+    movf LEDFLAG, W
     movwf PORTA
     btfsc PORTC, 1
     goto $-1
     RETURN
 LED3
-    movlw b'00000100'
-    XORWF 0x20,1
-    movf 0x20, W
+    movlw 0x04
+    XORWF LEDFLAG,1
+    movf LEDFLAG, W
     movwf PORTA
     btfsc PORTC, 2
     goto $-1
     RETURN
     
 LED4
-    movlw b'00001000'
-    XORWF 0x20,1
-    movf 0x20, W
+    movlw 0x08
+    XORWF LEDFLAG,1
+    movf LEDFLAG, W
     movwf PORTA
     btfsc PORTC, 3
     goto $-1
